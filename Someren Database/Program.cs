@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Someren_Database.Data;
+using Someren_Database.Repositories;
+
 namespace Someren_Database
 {
 	public class Program
@@ -7,6 +11,13 @@ namespace Someren_Database
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
+			// Register ApplicationDbContext for dependency injection
+			builder.Services.AddDbContext<ApplicationDbContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString("SomerenDatabase")));
+
+			// Register IRoomRepository with RoomRepository for dependency injection
+			builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();

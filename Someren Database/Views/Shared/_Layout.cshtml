@@ -28,9 +28,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Teachers" asp-action="TeachersIndex">Teacher</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Rooms" asp-action="RoomsIndex">Rooms</a>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Room
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Room" asp-action="Create">Add Room</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Room" asp-action="RoomIndex">Show All Rooms</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Room" asp-action="#">Edit existing room</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Room" asp-action="#">Delete existing room</a></li>
+                            </ul>
                         </li>
+
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
