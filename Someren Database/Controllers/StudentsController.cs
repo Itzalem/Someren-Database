@@ -4,43 +4,43 @@ using Someren_Database.Repositories;
 
 namespace Someren_Database.Controllers
 {
-    public class StudentsController : Controller
-    {
-        private readonly IStudentsRepository _studentsRepository;
+	public class StudentsController : Controller
+	{
+		private readonly IStudentsRepository _studentsRepository;
 
-        public StudentsController(IStudentsRepository studentsRepository)
-        {
-            _studentsRepository = studentsRepository;
-        }
+		public StudentsController(IStudentsRepository studentsRepository)
+		{
+			_studentsRepository = studentsRepository;
+		}
 
-        public IActionResult StudentsIndex()
-        {
-            List<Student> students = _studentsRepository.ListStudents();
+		public IActionResult StudentsIndex()
+		{
+			List<Student> students = _studentsRepository.ListStudents();
 
-            return View(students);
-        }
+			return View(students);
+		}
 
-        [HttpGet]
-        public IActionResult AddStudent()
-        {
-            return View();
-        }
+		[HttpGet]
+		public IActionResult AddStudent()
+		{
+			return View();
+		}
 
 
-        [HttpPost]
-        public IActionResult AddStudent(Student student)
-        {
-            try
-            {
-                _studentsRepository.AddStudent(student);
+		[HttpPost]
+		public IActionResult AddStudent(Student student)
+		{
+			try
+			{
+				_studentsRepository.AddStudent(student);
 
-                return RedirectToAction("StudentsIndex");
-            }
-            catch (Exception ex)
-            {
-                return View(student); 
-            }
-        }
+				return RedirectToAction("StudentsIndex");
+			}
+			catch (Exception ex)
+			{
+				return View(student);
+			}
+		}
 
 
 		// GET: UsersController/Edit/5
@@ -64,7 +64,7 @@ namespace Someren_Database.Controllers
 			{
 				_studentsRepository.UpdateStudent(student);
 
-				return RedirectToAction("IndexUsers");
+				return RedirectToAction("StudentsIndex");
 			}
 			catch (Exception ex)
 			{
@@ -72,6 +72,31 @@ namespace Someren_Database.Controllers
 			}
 		}
 
+		[HttpGet]
+		public ActionResult DeleteStudent(int? studentNumber)
+		{
+			if (studentNumber == null)
+			{
+				return NotFound();
+			}
+
+			Student? student = _studentsRepository.GetByStudentNumber((int)studentNumber);
+			return View(student);
+		}
+
+		[HttpPost]
+		public IActionResult DeleteStudent(Student student)
+		{
+			try
+			{
+				_studentsRepository.DeleteStudent(student);
+				return RedirectToAction("StudentsIndex");
+			}
+			catch (Exception ex)
+			{
+				return View(student);
+			}
+		}
 
 	
 		//VIEW, ADD, CHANGE AND DELEYTE STUDENTS

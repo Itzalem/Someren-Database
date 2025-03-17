@@ -67,7 +67,7 @@ namespace Someren_Database.Repositories
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = "SELECT StudentNumber, FirstName, LastName, PhoneNumber, StudentClass, " +
-                                "RoomNumber FROM Students ORDER BY LastName"; // WHERE IsDeleted = 0;"; aun no tengo soft delete
+								"RoomNumber FROM Students WHERE IsDeleted = 0 ORDER BY LastName"; // WHERE IsDeleted = 0;"; aun no tengo soft delete
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -115,19 +115,20 @@ namespace Someren_Database.Repositories
         {
 			using (SqlConnection connection = new SqlConnection(_connectionString))
 			{
-				string query = $"UPDATE Students SET StudentNumber = @StudentNumber, FirstName = @FirstName, " +
+				string query = $"UPDATE Students SET StudentNumber = @ChangedStudentNumber, FirstName = @FirstName, " +
 					$"LastName = @LastName, PhoneNumber = @PhoneNumber, StudentClass = @StudentClass, " +
-					$"RoomNumber = @RoomNumber WHERE StudentNumber = @StudentNumber";
+					$"RoomNumber = @RoomNumber WHERE StudentNumber = @OriginalStudentNumber";
 
 				SqlCommand command = new SqlCommand(query, connection);
 
 				//for the injection thingy
-				command.Parameters.AddWithValue("@StudentNumber", student.StudentNumber);
+				command.Parameters.AddWithValue("@ChangedStudentNumber", student.StudentNumber);
 				command.Parameters.AddWithValue("@FirstName", student.FirstName);
 				command.Parameters.AddWithValue("@LastName", student.LastName);
 				command.Parameters.AddWithValue("@PhoneNumber", student.PhoneNumber);
 				command.Parameters.AddWithValue("@StudentClass", student.StudentClass);
 				command.Parameters.AddWithValue("@RoomNumber", student.RoomNumber);
+				command.Parameters.AddWithValue("@OriginalStudentNumber", student.OriginalStudentNumber);
 
 				command.Connection.Open();
 
@@ -137,9 +138,22 @@ namespace Someren_Database.Repositories
 			}
 		}
 
-        public void DeleteStudent(Student student) //soft delete
-        {
+ 
+		public void DeleteStudent(Student student)
+		{
+			using (SqlConnection connection = new SqlConnection(_connectionString))
+			{
+				string query = "UPDATE Students SET IsDeleted = 1 WHERE StudentNumber = @StudentNumber";
+				SqlCommand command = new SqlCommand(query, connection);
 
-        }
-    }
+				command.Parameters.AddWithValue("@StudentNumber", student.StudentNumber);
+
+				connection.Open();
+
+				int nrOfRowsAffected = command.ExecuteNonQuery();
+				if (nrOfRowsAffected == 0)
+					throw new Exception("No students deleted");
+			}
+		}
+	}
 }
