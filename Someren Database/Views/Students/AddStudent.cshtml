@@ -1,0 +1,44 @@
+﻿@model Someren_Database.Models.Student
+
+@{
+	ViewData["Title"] = "Add Student";
+}
+
+
+<h1>Add New Student</h1>
+<form action="/Students/AddStudent" method="POST">
+	<div class="form-group py-2">
+		<label for="StudentNumber">Number:</label>
+		<input type="text" id="StudentNumber" name="StudentNumber" class="form-control" required value="@Model?.StudentNumber" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="FirstName"> Name:</label>
+		<input type="text" id="FirstName" name="FirstName" class="form-control" required value="@Model?.FirstName" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="LastName">Last Name:</label>
+		<input type="text" id="LastName" name="LastName" class="form-control" required value="@Model?.LastName" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="PhoneNumber">Phone Number:</label>
+		<input type="text" id="PhoneNumber" name="PhoneNumber" class="form-control" required value="@Model?.PhoneNumber" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="StudentClass">Class:</label>
+		<input type="text" id="StudentClass" name="StudentClass" class="form-control" required value="@Model?.StudentClass" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="RoomNumber">Room:</label>
+		<input type="text" id="RoomNumber" name="RoomNumber" class="form-control" required value="@Model?.RoomNumber" />
+	</div>	
+
+	<button type="submit" class="btn btn-primary">Save</button>
+	<a href="/Students/StudentsIndex">All Students</a>
+</form>
+
+

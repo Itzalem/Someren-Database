@@ -20,16 +20,62 @@ namespace Someren_Database.Controllers
             return View(students);
         }
 
-        
+        [HttpGet]
+        public IActionResult AddStudent()
+        {
+            return View();
+        }
 
 
+        [HttpPost]
+        public IActionResult AddStudent(Student student)
+        {
+            try
+            {
+                _studentsRepository.AddStudent(student);
 
-        //THINGS I NEED:
-        //All students in list, order by last name
-        //Display std#, fn, ln, cell#, class
+                return RedirectToAction("StudentsIndex");
+            }
+            catch (Exception ex)
+            {
+                return View(student); 
+            }
+        }
 
-        //VIEW, ADD, CHANGE AND DELEYTE STUDENTS
-        //Each field of the students can be changed
-        //All student (management) functions are accessible to the user by using links/buttons;
-    }
+
+		// GET: UsersController/Edit/5
+		[HttpGet]
+		public ActionResult UpdateStudent(int? studentNumber)
+		{
+			if (studentNumber == null)
+			{
+				return NotFound();
+			}
+
+			Student? student = _studentsRepository.GetByStudentNumber((int)studentNumber);
+			return View(student);
+		}
+
+		// POST: Users/Edit/5
+		[HttpPost]
+		public IActionResult UpdateStudent(Student student)
+		{
+			try
+			{
+				_studentsRepository.UpdateStudent(student);
+
+				return RedirectToAction("IndexUsers");
+			}
+			catch (Exception ex)
+			{
+				return View(student);
+			}
+		}
+
+
+	
+		//VIEW, ADD, CHANGE AND DELEYTE STUDENTS
+		//Each field of the students can be changed
+		//All student (management) functions are accessible to the user by using links/buttons;
+	}
 }
