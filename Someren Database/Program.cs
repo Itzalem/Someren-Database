@@ -18,7 +18,8 @@ namespace Someren_Database
 			// Register IRoomRepository/IStudentsRepository with RoomRepository/DbStudentsRepository
 			// for dependency injection
 			builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-			builder.Services.AddSingleton<IStudentsRepository, DbStudentsRepository>();
+			builder.Services.AddSingleton<IStudentsRepository, DbStudentsRepository>(); 
+			builder.Services.AddSingleton<ITeachersRepository, DbTeachersRepository>(); 
 			builder.Services.AddControllersWithViews();		
 		
 
