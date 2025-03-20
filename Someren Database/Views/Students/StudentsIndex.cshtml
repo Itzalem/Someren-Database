@@ -8,7 +8,8 @@
 	<h1 class="display-4">Students</h1>
 </div>
 
-<table class="table">
+<div class="container mx-auto" style="max-width:80%;">
+<table class="table table-hover table-striped border">
 	<thead>
 		<tr>
 			<th>Number</th>
@@ -30,14 +31,15 @@
 					<td>@student.PhoneNumber</td>
 					<td>@student.StudentClass</td>
 					<td>@student.RoomNumber</td>
-					<td><a asp-controller="Students" asp-action="UpdateStudent" asp-route-studentNumber="@student.StudentNumber">Edit</a></td>
-					<td><a asp-controller="Students" asp-action="DeleteStudent" asp-route-studentNumber="@student.StudentNumber">Delete</a></td>
+					<td><a class="btn btn-primary" asp-controller="Students" asp-action="UpdateStudent" asp-route-studentNumber="@student.StudentNumber">Edit</a></td>
+					<td><a class="btn btn-danger" asp-controller="Students" asp-action="DeleteStudent" asp-route-studentNumber="@student.StudentNumber">Delete</a></td>
 				</tr>
 			}
 		}
 	</tbody>
 
 </table>
+	</div>
 
-<a href="/Students/AddStudent"> Add New Student</a>
+	<a href="/Students/AddStudent" class="btn btn-primary"> Add New Student</a>
 

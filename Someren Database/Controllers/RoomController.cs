@@ -16,18 +16,25 @@ namespace Someren_Database.Controllers
         // Display all rooms or search by RoomNumber
         public async Task<IActionResult> RoomIndex(int? roomNumber)
         {
-            IEnumerable<Room> rooms;
-
-            if (roomNumber.HasValue)
+            IEnumerable<Room> rooms = new List<Room>();
+            
+            try
             {
-                // Search by RoomNumber using GetRoomByIdAsync
-                var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber.Value);
-                rooms = room != null ? new List<Room> { room } : new List<Room>(); // Return the found room or an empty list if not found
+                if (roomNumber.HasValue)
+                {
+                    // Search by RoomNumber using GetRoomByIdAsync
+                    var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber.Value);
+                    rooms = room != null ? new List<Room> { room } : new List<Room>(); // Return the found room or an empty list if not found
+                }
+                else
+                {
+                    // Show all rooms if no search query
+                    rooms = await _roomReposiroty.GetAllRoomsAsync();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Show all rooms if no search query
-                rooms = await _roomReposiroty.GetAllRoomsAsync();
+                ViewBag.ErrorMessage = "An error occured while fetching the rooms.";
             }
 
             return View(rooms);
@@ -44,11 +51,28 @@ namespace Someren_Database.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Room room)
         {
-            if (room != null && ModelState.IsValid)
+            try
             {
-                // Add room to db
-                await _roomReposiroty.AddRoomAsync(room);
-                return RedirectToAction("RoomIndex");
+                if (room != null && ModelState.IsValid)
+                {
+                    // Check if the room number already exists
+                    var existingRoom = await _roomReposiroty.GetRoomByIdAsync(room.RoomNumber);
+
+                    if (existingRoom != null)
+                    {
+                        // If the room number exists, set an error message and return to the create view
+                        ViewBag.ErrorMessage = "Room number already exists.";
+                        return View(room);
+                    }
+
+                    // Add room to db
+                    await _roomReposiroty.AddRoomAsync(room);
+                    return RedirectToAction("RoomIndex");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "An error occured while creating the rooms.";
             }
 
             // Return to create view if room is not valid
@@ -58,7 +82,17 @@ namespace Someren_Database.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int roomnumber)
         {
-            var room = await _roomReposiroty.GetRoomByIdAsync(roomnumber);
+            Room room = null;
+
+            try
+            {
+                room = await _roomReposiroty.GetRoomByIdAsync(roomnumber);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "An error occured while fetching the room for editing.";
+            }
+
             if (room == null)
             {
                 return NotFound();
@@ -70,10 +104,17 @@ namespace Someren_Database.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int roomnumber, Room room)
         {
-            if (ModelState.IsValid)
+            try
             {
-                await _roomReposiroty.UpdateRoomAsync(room);
-                return RedirectToAction("RoomIndex");
+                if (ModelState.IsValid)
+                {
+                    await _roomReposiroty.UpdateRoomAsync(room);
+                    return RedirectToAction("RoomIndex");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "An error occured while updating the room.";
             }
 
             return View(room);
@@ -82,7 +123,17 @@ namespace Someren_Database.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int roomNumber)
         {
-            var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber);
+            Room room = null;
+
+            try
+            {
+                room = await _roomReposiroty.GetRoomByIdAsync(roomNumber);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "An error occurred while fetching the room for deletion.";
+            }
+
             if (room == null)
             {
                 return NotFound();
@@ -94,57 +145,78 @@ namespace Someren_Database.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int roomNumber)
         {
-            var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber);
-            if (room != null)
+            try
             {
-                await _roomReposiroty.DeleteRoomAsync(roomNumber);
+                var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber);
+                if (room != null)
+                {
+                    await _roomReposiroty.DeleteRoomAsync(roomNumber);
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "An error occurred while deleting the room.";
             }
 
             return RedirectToAction("RoomIndex");
         }
 
 
-		// Action to search by Room Number
-		[HttpGet]
-		public async Task<IActionResult> EditRoomSearch(int? roomNumber)
-		{
-			if (roomNumber.HasValue)
-			{
-				var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber.Value);
-				if (room != null)
-				{
-					// Return the found room to the edit view
-					return View("Edit", room);
-				}
-				else
-				{
-					// If no room is found, show a message
-					ViewBag.Message = "Room not found.";
-				}
-			}
+        // Action to search by Room Number
+        [HttpGet]
+        public async Task<IActionResult> EditRoomSearch(int? roomNumber)
+        {
+            try
+            {
+                if (roomNumber.HasValue)
+                {
+                    var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber.Value);
+                    if (room != null)
+                    {
+                        // Return the found room to the edit view
+                        return View("Edit", room);
+                    }
+                    else
+                    {
+                        // If no room is found, show a message
+                        ViewBag.Message = "Room not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "An error occurred while searching for the room.";
+            }
 
-			// If no room number is entered, or no room is found, return to the search page
-			return View();
-		}
+            // If no room number is entered, or no room is found, return to the search page
+            return View();
+        }
 
 
         // Action to search for a Room and display details for deletion
         [HttpGet]
         public async Task<IActionResult> DeleteRoomSearch(int? roomNumber)
         {
-            if (roomNumber.HasValue)
+            try
             {
-                var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber.Value);
-                if (room != null)
+                if (roomNumber.HasValue)
                 {
-                    // Redirect to the Delete action for room deletion
-                    return RedirectToAction("Delete", new { roomNumber = room.RoomNumber });
+                    var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber.Value);
+                    if (room != null)
+                    {
+                        // Redirect to the Delete action for room deletion
+                        return RedirectToAction("Delete", new { roomNumber = room.RoomNumber });
+                    }
+                    else
+                    {
+                        // If no room is found, show a message
+                        ViewBag.Message = "Room not found.";
+                    }
                 }
-                else
-                {
-                    // If no room is found, show a message
-                    ViewBag.Message = "Room not found.";
-                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "An error occurred while searching for the room.";
             }
 
             // Return the view for searching if no room number is entered or if no room is found
