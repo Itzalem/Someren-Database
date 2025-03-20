@@ -30,10 +30,14 @@
 					<td>@student.PhoneNumber</td>
 					<td>@student.StudentClass</td>
 					<td>@student.RoomNumber</td>
+					<td><a asp-controller="Students" asp-action="UpdateStudent" asp-route-studentNumber="@student.StudentNumber">Edit</a></td>
+					<td><a asp-controller="Students" asp-action="DeleteStudent" asp-route-studentNumber="@student.StudentNumber">Delete</a></td>
 				</tr>
 			}
 		}
 	</tbody>
 
 </table>
+
+<a href="/Students/AddStudent"> Add New Student</a>
 

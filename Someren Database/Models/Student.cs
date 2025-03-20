@@ -8,10 +8,11 @@
         public int PhoneNumber { get; set; }
         public string StudentClass { get; set; }
 
-        public int RoomNumber { get; set; } 
+        public int RoomNumber { get; set; }
+		public int OriginalStudentNumber { get; set; }
 
 
-        public Student ()
+		public Student ()
         {
         }
 
@@ -24,6 +25,7 @@
             PhoneNumber = phoneNumber;
             StudentClass = studentClass;
             RoomNumber = roomNumber;
-        }
+			OriginalStudentNumber = studentNumber;
+		}
     }
 }
