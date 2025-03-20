@@ -1,0 +1,46 @@
+﻿@model Someren_Database.Models.Teacher
+@{
+	ViewData["Title"] = "Edit Teacher";
+}
+
+<h1>Edit Teacher</h1>
+
+<form action="/Teachers/UpdateTeacher/@Model?.TeacherID" method="POST">
+
+	<div class="form-group py-2">
+		<label for="TeacherID">ID:</label>
+		<input type="text" id="TeacherID" name="TeacherID" class="form-control" required value="@Model?.TeacherID" />
+
+		<input type="hidden" name="OriginalTeacherID" value="@Model?.OriginalTeacherID" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="RoomNumber">Room:</label>
+		<input type="text" id="RoomNumber" name="RoomNumber" class="form-control" required value="@Model?.RoomNumber" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="FirstName"> Name:</label>
+		<input type="text" id="FirstName" name="FirstName" class="form-control" required value="@Model?.FirstName" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="LastName">Last Name:</label>
+		<input type="text" id="LastName" name="LastName" class="form-control" required value="@Model?.LastName" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="PhoneNumber">Phone Number:</label>
+		<input type="text" id="PhoneNumber" name="PhoneNumber" class="form-control" required value="@Model?.PhoneNumber" />
+	</div>
+
+	<div class="form-group py-2">
+		<label for="Age">Age:</label>
+		<input type="number" id="Age" name="Age" class="form-control" required value="@Model?.Age" />
+	</div>
+
+	
+
+	<button type="submit" class="btn btn-primary">Save</button>
+	<a href="/Teachers/TeachersIndex">Cancel</a>
+</form>

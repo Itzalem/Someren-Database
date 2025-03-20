@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Someren_Database.Repositories;
 
 namespace Someren_Database
@@ -10,11 +11,13 @@ namespace Someren_Database
 
             // Add services to the container.
             builder.Services.AddSingleton<IStudentsRepository, DbStudentsRepository>();
+            builder.Services.AddSingleton<ITeachersRepository, DbTeachersRepository>();
             builder.Services.AddControllersWithViews();
 
+            
 
-			var app = builder.Build();
-
+           var app = builder.Build();
+			
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{

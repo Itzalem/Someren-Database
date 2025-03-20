@@ -1,7 +1,44 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<Someren_Database.Models.Teacher>
+
 @{
+	ViewData["Title"] = "Teacher";
 }
 
-<h1>Teachers</h1>
+<div class="text-center">
+	<h1 class="display-4">Teachers</h1>
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Room</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Phone Number</th>
+			<th>Age</th>
+		</tr>
+	</thead>
+	<tbody>
+		@{
+			foreach (var teacher in Model)
+			{
+				<tr>
+					<td>@teacher.TeacherID</td>
+					<td>@teacher.RoomNumber</td>
+					<td>@teacher.FirstName</td>
+					<td>@teacher.LastName</td>
+					<td>@teacher.PhoneNumber</td>
+					<td>@teacher.Age</td>
+					
+					<td><a asp-controller="Teachers" asp-action="UpdateTeacher" asp-route-teacherID="@teacher.TeacherID">Edit</a></td>
+					<td><a asp-controller="Teachers" asp-action="DeleteTeacher" asp-route-teacherID="@teacher.TeacherID">Delete</a></td>
+				</tr>
+			}
+		}
+	</tbody>
+
+</table>
+
+<a href="/Teachers/AddTeacher"> Add New Teacher</a>
+
