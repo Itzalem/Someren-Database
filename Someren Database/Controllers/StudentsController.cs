@@ -1,12 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Someren_Database.Models;
+using Someren_Database.Repositories;
 
 namespace Someren_Database.Controllers
 {
     public class StudentsController : Controller
     {
+        private readonly IStudentsRepository _studentsRepository;
+
+        public StudentsController(IStudentsRepository studentsRepository)
+        {
+            _studentsRepository = studentsRepository;
+        }
+
         public IActionResult StudentsIndex()
         {
-            return View();
+            List<Student> students = _studentsRepository.ListStudents();
+
+            return View(students);
         }
 
         
