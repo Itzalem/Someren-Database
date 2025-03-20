@@ -33,12 +33,14 @@
 	</div>
 
 	<div class="form-group py-2">
-		<label for="RoomNumber">Room:</label>
-		<input type="text" id="RoomNumber" name="RoomNumber" class="form-control" required value="@Model?.RoomNumber" />
+		<label asp-for="RoomNumber" class="control-label">Room:</label>
+		<select asp-for="RoomNumber" asp-items="(SelectList)ViewBag.RoomId" class="form-control">
+			<!--<option value="">Seleccione un cuarto</option>-->
+		</select>
 	</div>	
 
-	<button type="submit" class="btn btn-primary">Save</button>
-	<a href="/Students/StudentsIndex">All Students</a>
+	<button type="submit" class="btn btn-success">Save</button>
+	<a class="btn btn-warning" href="/Students/StudentsIndex">All Students</a>
 </form>
 
 
