@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.table-hover tbody tr:hover {
+    background-color: #c7ddfc !important; 
+}

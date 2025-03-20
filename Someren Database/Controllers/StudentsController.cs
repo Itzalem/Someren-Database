@@ -50,14 +50,22 @@ namespace Someren_Database.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				try
+				var existingStudent = _studentsRepository.GetByStudentNumber(student.StudentNumber);
+				if (existingStudent != null)
 				{
-					_studentsRepository.AddStudent(student);
-					return RedirectToAction("StudentsIndex");
+					ModelState.AddModelError("StudentNumber", "That number is already assigned to a student");
 				}
-				catch (Exception ex)
+				else
 				{
-					ModelState.AddModelError("","" + ex.Message);
+					try
+					{
+						_studentsRepository.AddStudent(student);
+						return RedirectToAction("StudentsIndex");
+					}
+					catch (Exception ex)
+					{
+						ModelState.AddModelError("", ex.Message);
+					}
 				}
 			}
 
@@ -70,7 +78,7 @@ namespace Someren_Database.Controllers
 				{
 					studentRooms.Add(r);
 				}
-			}
+			}			
 
 			ViewBag.RoomId = new SelectList(studentRooms, "RoomId", "RoomNumber", student.RoomNumber);
 
