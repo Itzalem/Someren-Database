@@ -1,4 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Someren_Database.Data;
 using Someren_Database.Repositories;
 
 namespace Someren_Database
@@ -9,15 +10,21 @@ namespace Someren_Database
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddSingleton<IStudentsRepository, DbStudentsRepository>();
-            builder.Services.AddSingleton<ITeachersRepository, DbTeachersRepository>();
-            builder.Services.AddControllersWithViews();
+			// Add services to the container.
+			// Register ApplicationDbContext for dependency injection
+			builder.Services.AddDbContext<ApplicationDbContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString("Someren_Database")));
 
-            
+			// Register IRoomRepository/IStudentsRepository with RoomRepository/DbStudentsRepository
+			// for dependency injection
+			builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+			builder.Services.AddSingleton<IStudentsRepository, DbStudentsRepository>();
+			builder.Services.AddControllersWithViews();		
+		
 
-           var app = builder.Build();
-			
+
+			var app = builder.Build();
+
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{

@@ -13,11 +13,7 @@ namespace Someren_Database.Repositories
 			if (string.IsNullOrEmpty(_connectionString))
 			{
 				_connectionString = "Server=your_server;Database=your_database;User Id=your_user;Password=your_password;";
-				Console.WriteLine($"_connectionString asignado manualmente: {_connectionString}");
-			}
-			else
-			{
-				Console.WriteLine($"_connectionString desde configuración: {_connectionString}");
+				
 			}
 		}
 

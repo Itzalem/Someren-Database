@@ -1,0 +1,31 @@
+﻿@model Someren_Database.Models.Room
+
+@{
+    ViewData["Title"] = "Delete Room";
+}
+
+<div class="container mt-4">
+    <h1>Delete Room</h1>
+
+    <h3>Are you sure you want to delete room @Model.RoomNumber?</h3>
+
+    <div>
+        <label>Room Type:</label> @Model.RoomType
+    </div>
+    <div>
+        <label>Building:</label> @Model.Building
+    </div>
+    <div>
+        <label>Floor:</label> @Model.Floor
+    </div>
+    <div>
+        <label>Number of beds:</label> @Model.Size
+    </div>
+
+    <form method="post">
+        <input type="hidden" name="roomNumber" value="@Model.RoomNumber" />
+        <button type="submit" class="btn btn-danger mt-3">Delete</button>
+        <a asp-action="RoomIndex" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+

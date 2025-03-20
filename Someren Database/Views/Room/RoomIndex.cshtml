@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Someren_Database.Models.Room>
+
+@{
+    ViewData["Title"] = "Room List";
+}
+
+<div class="container mt-4">
+    <h1>List Of All Rooms</h1>
+
+    <form method="get" asp-action="RoomIndex" class="mb-4">
+        <div class="form-group">
+            <label for="roomNumber">Search by Room Number:</label>
+            <input type="number" id="roomNumber" name="roomNumber" class="form-control" placeholder="Enter Room Number">
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Search</button>
+    </form>
+
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Room Number</th>
+                <th>Room Type</th>
+                <th>Building</th>
+                <th>Floor</th>
+                <th>Number of beds</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var room in Model)
+            {
+                <tr>
+                    <td>@room.RoomNumber</td>
+                    <td>@room.RoomType</td>
+                    <td>@room.Building</td>
+                    <td>@room.Floor</td>
+                    <td>@room.Size</td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Room" asp-route-roomNumber="@room.RoomNumber" class="btn btn-primary">Edit</a>
+                        <a asp-action="Delete" asp-controller="Room" asp-route-roomNumber="@room.RoomNumber" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a asp-action="Create" asp-controller="Room" class="btn btn-success">Create New Room</a>
+    </div>
+</div>
