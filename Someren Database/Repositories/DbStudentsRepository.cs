@@ -56,18 +56,33 @@ namespace Someren_Database.Repositories
 			}
 		}
 
-		public List <Student> ListStudents()
+		public List <Student> ListStudents(string lastNameFilter = null)
         {
+			
             List <Student> students = new List<Student>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = "SELECT StudentNumber, FirstName, LastName, PhoneNumber, StudentClass, " +
-								"RoomNumber FROM Students WHERE IsDeleted = 0 ORDER BY LastName"; // WHERE IsDeleted = 0;"; aun no tengo soft delete
-                SqlCommand command = new SqlCommand(query, connection);
+								"RoomNumber FROM Students WHERE IsDeleted = 0";
+
+                if (!string.IsNullOrEmpty(lastNameFilter))
+                {
+                    query += " AND LastName = @LastName";
+                }
+
+				query += " ORDER BY LastName";
+
+
+				SqlCommand command = new SqlCommand(query, connection);
+
+                if (!string.IsNullOrEmpty(lastNameFilter))
+                {
+                    command.Parameters.AddWithValue("@LastName", lastNameFilter);
+                }
 
                 command.Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = command.ExecuteReader();                
 
                 while (reader.Read())
                 {

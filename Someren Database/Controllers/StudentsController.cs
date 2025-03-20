@@ -16,9 +16,11 @@ namespace Someren_Database.Controllers
 			_roomRepository = roomRepository;
 		}
 
-		public IActionResult StudentsIndex()
+		[HttpGet]
+		public IActionResult StudentsIndex(string lastNameFilter = null)
 		{
-			List<Student> students = _studentsRepository.ListStudents();
+			List<Student> students = _studentsRepository.ListStudents(lastNameFilter);
+			ViewBag.LastNameFilter = lastNameFilter; 
 
 			return View(students);
 		}
@@ -139,11 +141,7 @@ namespace Someren_Database.Controllers
 			{
 				return View(student);
 			}
-		}
-
-	
-		//VIEW, ADD, CHANGE AND DELEYTE STUDENTS
-		//Each field of the students can be changed
-		//All student (management) functions are accessible to the user by using links/buttons;
+		}	
+		
 	}
 }
