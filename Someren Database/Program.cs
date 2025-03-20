@@ -13,7 +13,7 @@ namespace Someren_Database
 			// Add services to the container.
 			// Register ApplicationDbContext for dependency injection
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(builder.Configuration.GetConnectionString("SomerenDatabase")));
+				options.UseSqlServer(builder.Configuration.GetConnectionString("Someren_Database")));
 
 			// Register IRoomRepository with RoomRepository for dependency injection
 			builder.Services.AddScoped<IRoomRepository, RoomRepository>();

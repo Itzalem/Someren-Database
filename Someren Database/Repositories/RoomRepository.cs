@@ -35,13 +35,13 @@ namespace Someren_Database.Repositories
 
         public async Task<IEnumerable<Room>> GetAllRoomsAsync()
         {
-			return await _context.Rooms.ToListAsync();
+			return await _context.Rooms.OrderBy(r => r.RoomNumber).ToListAsync();
 		}
 
-		public async Task<Room> GetRoomByIdAsync(int roomNumber)
+        public async Task<Room> GetRoomByIdAsync(int roomNumber)
         {
-			return await _context.Rooms.FirstOrDefaultAsync(r => r.RoomNumber == roomNumber);
-		}
+            return await _context.Rooms.FirstOrDefaultAsync(r => r.RoomNumber == roomNumber);
+        }
 
         public async Task<Room> UpdateRoomAsync(Room room)
         {

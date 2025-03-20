@@ -43,6 +43,9 @@
 		<button type="submit" asp-action="Create" asp-controller="Room" class="btn btn-primary mt-3">Create Room</button>
 	</form>
 
-	<a href="@Url.Action("Index", "Room")" class="btn btn-secondary mt-3">Back to Room List</a>
+	<form method="get" asp-controller="Room" asp-action="RoomIndex">
+		<button type="submit" class="btn btn-secondary mt-3">Back to Room List</button>
+	</form>
+
 
 </div>
