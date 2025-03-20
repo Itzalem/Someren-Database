@@ -55,6 +55,16 @@ namespace Someren_Database.Controllers
             {
                 if (room != null && ModelState.IsValid)
                 {
+                    // Check if the room number already exists
+                    var existingRoom = await _roomReposiroty.GetRoomByIdAsync(room.RoomNumber);
+
+                    if (existingRoom != null)
+                    {
+                        // If the room number exists, set an error message and return to the create view
+                        ViewBag.ErrorMessage = "Room number already exists.";
+                        return View(room);
+                    }
+
                     // Add room to db
                     await _roomReposiroty.AddRoomAsync(room);
                     return RedirectToAction("RoomIndex");
