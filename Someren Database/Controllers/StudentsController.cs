@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Someren_Database.Models;
 using Someren_Database.Repositories;
 
@@ -7,10 +8,12 @@ namespace Someren_Database.Controllers
 	public class StudentsController : Controller
 	{
 		private readonly IStudentsRepository _studentsRepository;
+		private readonly IRoomRepository _roomRepository;
 
-		public StudentsController(IStudentsRepository studentsRepository)
+		public StudentsController(IStudentsRepository studentsRepository, IRoomRepository roomRepository)
 		{
 			_studentsRepository = studentsRepository;
+			_roomRepository = roomRepository;
 		}
 
 		public IActionResult StudentsIndex()
@@ -21,25 +24,57 @@ namespace Someren_Database.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult AddStudent()
+		public async Task<IActionResult> AddStudent()
 		{
+			
+			IEnumerable<Room> allRooms = await _roomRepository.GetAllRoomsAsync();
+			
+			List<Room> studentRooms = new List<Room>();
+			
+			foreach (Room r in allRooms)
+			{
+				if (r.RoomType != null && r.RoomType.Equals("Student", System.StringComparison.OrdinalIgnoreCase))
+				{
+					studentRooms.Add(r);
+				}
+			}
+
+			ViewBag.RoomId = new SelectList(studentRooms, "RoomNumber", "RoomNumber");
+
 			return View();
 		}
 
 
 		[HttpPost]
-		public IActionResult AddStudent(Student student)
+		public async Task<IActionResult> AddStudent(Student student)
 		{
-			try
+			if (ModelState.IsValid)
 			{
-				_studentsRepository.AddStudent(student);
+				try
+				{
+					_studentsRepository.AddStudent(student);
+					return RedirectToAction("StudentsIndex");
+				}
+				catch (Exception ex)
+				{
+					ModelState.AddModelError("","" + ex.Message);
+				}
+			}
 
-				return RedirectToAction("StudentsIndex");
-			}
-			catch (Exception ex)
+			IEnumerable<Room> allRooms = await _roomRepository.GetAllRoomsAsync();
+
+			List<Room> studentRooms = new List<Room>();
+			foreach (Room r in allRooms)
 			{
-				return View(student);
+				if (r.RoomType != null && r.RoomType.Equals("Student", System.StringComparison.OrdinalIgnoreCase))
+				{
+					studentRooms.Add(r);
+				}
 			}
+
+			ViewBag.RoomId = new SelectList(studentRooms, "RoomId", "RoomNumber", student.RoomNumber);
+
+			return View(student);
 		}
 
 
