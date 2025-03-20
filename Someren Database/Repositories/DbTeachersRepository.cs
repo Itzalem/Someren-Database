@@ -23,7 +23,7 @@ namespace Someren_Database.Repositories
 
         private Teacher ReadTeacher(SqlDataReader reader)
         {
-            int teacherID = (int)reader["lecturer_id"];
+            int teacherID = (int)reader["TeacherID"];
             int roomNumber = (int)reader["roomnumber"];
             string firstName = (string)reader["firstName"];
             string lastName = (string)reader["lastName"];
@@ -38,7 +38,7 @@ namespace Someren_Database.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT lecturer_id, roomnumber, firstName, lastName, phoneNumber, age " +
+                string query = "SELECT TeacherID, roomnumber, firstName, lastName, phoneNumber, age " +
                     "FROM Teachers WHERE TeacherID = @TeacherID;";
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -67,7 +67,7 @@ namespace Someren_Database.Repositories
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT lecturer_id, RoomNumber, firstName, lastName, phoneNumber, age " +
+                string query = "SELECT TeacherID, RoomNumber, firstName, lastName, phoneNumber, age " +
                                 "FROM Teachers ORDER BY LastName"; //c
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -89,7 +89,9 @@ namespace Someren_Database.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = $"INSERT INTO Teachers (lecturer_id, roomNumber, FirstName, LastName, PhoneNumber, age) @TeacherID,@RoomNumber @FirstName, @LastName, @PhoneNumber, @Age);";
+                string query = "INSERT INTO Teachers (TeacherID, RoomNumber, FirstName, LastName, PhoneNumber, Age) " +
+                "VALUES (@TeacherID, @RoomNumber, @FirstName, @LastName, @PhoneNumber, @Age);";
+
 
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -101,13 +103,14 @@ namespace Someren_Database.Repositories
                 command.Parameters.AddWithValue("@PhoneNumber", teacher.PhoneNumber);
                 command.Parameters.AddWithValue("@Age", teacher.Age);
                
+          
               
 
                 command.Connection.Open();
                 int rowsChanged = command.ExecuteNonQuery();
                 if (rowsChanged != 1)
                 {
-                    throw new Exception("Lecturer addition failed");
+                    throw new Exception("Teacher addition failed");
                 }
 
             }
@@ -117,9 +120,9 @@ namespace Someren_Database.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = $"UPDATE Teachers SET lecturer_id = @ChangedTeacherID, FirstName = @FirstName, " +
+                string query = $"UPDATE Teachers SET TeacherID = @ChangedTeacherID, FirstName = @FirstName, " +
                     $"LastName = @LastName, PhoneNumber = @PhoneNumber, age = @Age, " +
-                    $"RoomNumber = @RoomNumber WHERE lecturer_id = @OriginalTeacherID";
+                    $"RoomNumber = @RoomNumber WHERE TeacherID = @OriginalTeacherID";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -136,7 +139,7 @@ namespace Someren_Database.Repositories
 
                 int nrOfRowsAffected = command.ExecuteNonQuery();
                 if (nrOfRowsAffected == 0)
-                    throw new Exception("No lecturers updated");
+                    throw new Exception("No teachers updated");
             }
         }
 
@@ -145,7 +148,7 @@ namespace Someren_Database.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "UPDATE Teachers SET IsDeleted = 1 WHERE TeacherID = @TeacherID";
+                string query = "Delete Teachers WHERE TeacherID = @TeacherID";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@TeacherID", teacher.TeacherID);
@@ -154,7 +157,7 @@ namespace Someren_Database.Repositories
 
                 int nrOfRowsAffected = command.ExecuteNonQuery();
                 if (nrOfRowsAffected == 0)
-                    throw new Exception("No lecturers deleted");
+                    throw new Exception("No teachers deleted");
             }
         }
     }

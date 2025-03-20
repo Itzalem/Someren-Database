@@ -38,6 +38,7 @@ namespace Someren_Database.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return View(teacher);
             }
         }
@@ -67,6 +68,7 @@ namespace Someren_Database.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return View(teacher);
             }
         }
@@ -93,6 +95,7 @@ namespace Someren_Database.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return View(teacher);
             }
         }
