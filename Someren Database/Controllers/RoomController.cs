@@ -13,13 +13,22 @@ namespace Someren_Database.Controllers
             _roomReposiroty = roomReposiroty;
         }
 
-        // Display all rooms or search by RoomNumber
-        public async Task<IActionResult> RoomIndex(int? roomNumber)
+        // Display all rooms or search by RoomNumber or filter by RoomType
+        public async Task<IActionResult> RoomIndex(int? roomNumber, string roomType = "All")
         {
             IEnumerable<Room> rooms = new List<Room>();
-            
+
             try
             {
+                // Set default room type if null or empty
+                if (string.IsNullOrEmpty(roomType))
+                {
+                    roomType = "All";
+                }
+
+                // Store the selected room type in ViewBag for the dropdown
+                ViewBag.SelectedRoomType = roomType;
+
                 if (roomNumber.HasValue)
                 {
                     // Search by RoomNumber using GetRoomByIdAsync
@@ -30,11 +39,17 @@ namespace Someren_Database.Controllers
                 {
                     // Show all rooms if no search query
                     rooms = await _roomReposiroty.GetAllRoomsAsync();
+
+                    // Filter by room type if not "All"
+                    if (roomType != "All")
+                    {
+                        rooms = rooms.Where(r => r.RoomType == roomType).ToList();
+                    }
                 }
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "An error occured while fetching the rooms.";
+                ViewBag.ErrorMessage = "An error occurred while fetching the rooms.";
             }
 
             return View(rooms);
@@ -102,7 +117,7 @@ namespace Someren_Database.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int roomnumber, Room room)
+        public async Task<IActionResult> Edit(Room room)
         {
             try
             {

@@ -15,6 +15,18 @@
         <button type="submit" class="btn btn-primary mt-2">Search</button>
     </form>
 
+    <form method="get" asp-action="RoomIndex" class="mb-4">
+         <div class="form-group">
+            <label for="roomType">Filter by Room Type:</label>
+            <select id="roomType" name="roomType" class="form-control">
+                <option value="All" selected="@(ViewBag.SelectedRoomType == "All")">All</option>
+                <option value="Student" selected="@(ViewBag.SelectedRoomType == "Student")">Student</option>
+                <option value="Teacher" selected="@(ViewBag.SelectedRoomType == "Teacher")">Teacher</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Filter</button>
+    </form>
+
     <table class="table table-striped table-bordered table-hover">
         <thead class="thead-dark">
             <tr>
