@@ -44,7 +44,7 @@ namespace Someren_Database.Repositories
 
 				if (reader.Read())
 				{
-					Student student = ReadStudent(reader); //convierte la fila de datos SQL en un user de vuelta 
+					Student student = ReadStudent(reader); 
 					reader.Close();
 					return student;
 				}

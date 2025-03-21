@@ -43,7 +43,7 @@ namespace Someren_Database.Controllers
 
 			ViewBag.RoomId = new SelectList(studentRooms, "RoomNumber", "RoomNumber");
 
-			return View();
+			return View(new Student());
 		}
 
 
@@ -55,7 +55,7 @@ namespace Someren_Database.Controllers
 				var existingStudent = _studentsRepository.GetByStudentNumber(student.StudentNumber);
 				if (existingStudent != null)
 				{
-					ModelState.AddModelError("StudentNumber", "That number is already assigned to a student");
+					ModelState.AddModelError("StudentNumber", "That number was already assigned to a student, please choose a new one");
 				}
 				else
 				{
@@ -82,7 +82,7 @@ namespace Someren_Database.Controllers
 				}
 			}			
 
-			ViewBag.RoomId = new SelectList(studentRooms, "RoomId", "RoomNumber", student.RoomNumber);
+			ViewBag.RoomId = new SelectList(studentRooms, "RoomNumber", "RoomNumber", student.RoomNumber);
 
 			return View(student);
 		}
