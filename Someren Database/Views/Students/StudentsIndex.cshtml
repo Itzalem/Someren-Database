@@ -5,13 +5,13 @@
 }
 
 <div class="text-center">
-	<h1 class="display-4">Students</h1>
+	<h1>All Students</h1>
 </div>
 
 <form asp-action="StudentsIndex" method="get" class="mb-3">
 	<div class="form-group">
 		<input type="text" name="lastNameFilter" class="form-control mr-2" placeholder="Search by Last Name" value="@ViewBag.LastNameFilter" />
-		<button type="submit" class="btn btn-primary">Filter</button>
+		<button type="submit" class="btn btn-primary mt-2">Filter</button>
 	</div>
 </form>
 
