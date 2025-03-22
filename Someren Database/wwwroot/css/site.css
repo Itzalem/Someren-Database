@@ -20,3 +20,46 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.table-hover tbody tr:hover {
+    background-color: #c7ddfc !important; 
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px; 
+    margin-top: 45px; 
+}
+
+.custom-btn {
+    width: 300px;
+    height: 200px;
+    border-color: black;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+
+    font-weight: bold;
+    font-size: 36px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.btn-students {
+    background-image: url('students.jpg'); 
+}
+
+.btn-teachers {
+    background-image: url('teachers.jpg'); 
+}
+
+.btn-rooms {
+    background-image: url('rooms.png'); 
+}

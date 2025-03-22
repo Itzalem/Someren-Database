@@ -4,7 +4,7 @@ namespace Someren_Database.Repositories
 {
     public interface IStudentsRepository
     {
-        List<Student> ListStudents();
+        List<Student> ListStudents(string lastNameFilter);
         Student GetByStudentNumber(int studentNumber);
 
 		void AddStudent (Student user);

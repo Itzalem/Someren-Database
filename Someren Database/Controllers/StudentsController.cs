@@ -16,9 +16,11 @@ namespace Someren_Database.Controllers
 			_roomRepository = roomRepository;
 		}
 
-		public IActionResult StudentsIndex()
+		[HttpGet]
+		public IActionResult StudentsIndex(string lastNameFilter = null)
 		{
-			List<Student> students = _studentsRepository.ListStudents();
+			List<Student> students = _studentsRepository.ListStudents(lastNameFilter);
+			ViewBag.LastNameFilter = lastNameFilter; 
 
 			return View(students);
 		}
@@ -41,7 +43,7 @@ namespace Someren_Database.Controllers
 
 			ViewBag.RoomId = new SelectList(studentRooms, "RoomNumber", "RoomNumber");
 
-			return View();
+			return View(new Student());
 		}
 
 
@@ -50,14 +52,22 @@ namespace Someren_Database.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				try
+				var existingStudent = _studentsRepository.GetByStudentNumber(student.StudentNumber);
+				if (existingStudent != null)
 				{
-					_studentsRepository.AddStudent(student);
-					return RedirectToAction("StudentsIndex");
+					ModelState.AddModelError("StudentNumber", "That number was already assigned to a student, please choose a new one");
 				}
-				catch (Exception ex)
+				else
 				{
-					ModelState.AddModelError("","" + ex.Message);
+					try
+					{
+						_studentsRepository.AddStudent(student);
+						return RedirectToAction("StudentsIndex");
+					}
+					catch (Exception ex)
+					{
+						ModelState.AddModelError("", ex.Message);
+					}
 				}
 			}
 
@@ -70,9 +80,9 @@ namespace Someren_Database.Controllers
 				{
 					studentRooms.Add(r);
 				}
-			}
+			}			
 
-			ViewBag.RoomId = new SelectList(studentRooms, "RoomId", "RoomNumber", student.RoomNumber);
+			ViewBag.RoomId = new SelectList(studentRooms, "RoomNumber", "RoomNumber", student.RoomNumber);
 
 			return View(student);
 		}
@@ -131,11 +141,7 @@ namespace Someren_Database.Controllers
 			{
 				return View(student);
 			}
-		}
-
-	
-		//VIEW, ADD, CHANGE AND DELEYTE STUDENTS
-		//Each field of the students can be changed
-		//All student (management) functions are accessible to the user by using links/buttons;
+		}	
+		
 	}
 }

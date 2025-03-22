@@ -1,55 +1,156 @@
 ﻿@model Someren_Database.Models.Room
-
 @{
     ViewData["Title"] = "Edit Room";
 }
-
 <div class="container mt-4">
     <h1>Edit Room</h1>
-
     <form method="post" asp-action="Edit" asp-controller="Room">
         <div class="form-group">
             <label for="RoomNumber">Room Number</label>
             <input type="number" class="form-control" id="RoomNumber" name="RoomNumber" value="@Model.RoomNumber" readonly />
         </div>
 
-        @*
-        <div class="form-group">
-            <label for="RoomType">Room Type</label>
-            <input type="text" class="form-control" id="RoomType" name="RoomType" value="@Model.RoomType" />
-        </div>
-        *@
-
         <div class="form-group">
             <label class="form-label" for="RoomType">Room Type</label>
-            <select class="form-control" id="RoomType" name="RoomType" required>
-                <option value="Student" selected="@((Model.RoomType == "Student") ? "selected" : null)">Student</option>
-                <option value="Teacher" selected="@((Model.RoomType == "Teacher") ? "selected" : null)">Teacher</option>
+            <select class="form-control" id="RoomType" name="RoomType" required onchange="updateFormOptions()">
+                <option value="Student" selected="@(Model.RoomType == "Student")">Student</option>
+                <option value="Teacher" selected="@(Model.RoomType == "Teacher")">Teacher</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label class="form-label" for="Buidling">Building</label>
-            <select class="form-control" id="Building" name="Building" required>
-                <option value="A" selected="@((Model.Building == "A") ? "selected" : null)">Building A</option>
-                <option value="B" selected="@((Model.Building == "B") ? "selected" : null)">Building B</option>
+            <label class="form-label" for="Building">Building</label>
+            <select class="form-control" id="Building" name="Building" required onchange="updateFloorOptions()">
+                <option value="A" selected="@(Model.Building == "A")">Building A</option>
+                <option value="B" selected="@(Model.Building == "B")">Building B</option>
             </select>
         </div>
 
         <div class="form-group">
             <label class="form-label" for="Floor">Floor</label>
             <select class="form-control" id="Floor" name="Floor" required>
-                <option value="1" selected="@((Model.Floor == 1) ? "selected" : null)">Floor 1</option>
-                <option value="2" selected="@((Model.Floor == 2) ? "selected" : null)">Floor 2</option>
+                <option value="1" selected="@(Model.Floor == 1)">Floor 1 (ground floor)</option>
+                <option value="2" selected="@(Model.Floor == 2)">Floor 2</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="Size">Number of beds</label>
-            <input type="number" class="form-control" id="Size" name="Size" value="@Model.Size" required />
+            <label class="form-label" for="Size">Number of beds</label>
+            <select class="form-control" id="Size" name="Size" required>
+                <option value="1" selected="@(Model.Size == 1)">1</option>
+                <option value="8" selected="@(Model.Size == 8)">8</option>
+            </select>
         </div>
+
+        <!-- Hidden fields to store values when dropdowns are disabled -->
+        <input type="hidden" id="hiddenBuilding" name="Building" />
+        <input type="hidden" id="hiddenFloor" name="Floor" />
+        <input type="hidden" id="hiddenSize" name="Size" />
 
         <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
         <a asp-action="RoomIndex" class="btn btn-secondary mt-3">Cancel</a>
     </form>
 </div>
+
+<script>
+    // Run when the page loads to set initial state
+    document.addEventListener('DOMContentLoaded', function() {
+        updateFormOptions();
+    });
+
+    function updateFormOptions() {
+        const roomType = document.getElementById('RoomType').value;
+        const buildingSelect = document.getElementById('Building');
+        const floorSelect = document.getElementById('Floor');
+        const sizeSelect = document.getElementById('Size');
+
+        // Get hidden fields
+        const hiddenBuilding = document.getElementById('hiddenBuilding');
+        const hiddenFloor = document.getElementById('hiddenFloor');
+        const hiddenSize = document.getElementById('hiddenSize');
+
+        if (roomType === 'Teacher') {
+            // For teachers: single room, ground floor, building A
+            sizeSelect.value = '1';
+            buildingSelect.value = 'A';
+            floorSelect.value = '1';
+
+            // Make visible fields readonly instead of disabled
+            sizeSelect.disabled = true;
+            buildingSelect.disabled = true;
+            floorSelect.disabled = true;
+
+            // Set hidden fields with correct values
+            hiddenSize.value = '1';
+            hiddenBuilding.value = 'A';
+            hiddenFloor.value = '1';
+        } else {
+            // For students: 8 beds
+            sizeSelect.value = '8';
+            sizeSelect.disabled = true;
+            hiddenSize.value = '8';
+
+            // Enable building selection
+            buildingSelect.disabled = false;
+            hiddenBuilding.value = ''; // Clear hidden field
+
+            // Update floor options based on building
+            updateFloorOptions();
+        }
+    }
+
+    function updateFloorOptions() {
+        const roomType = document.getElementById('RoomType').value;
+        const building = document.getElementById('Building').value;
+        const floorSelect = document.getElementById('Floor');
+        const hiddenFloor = document.getElementById('hiddenFloor');
+        const hiddenBuilding = document.getElementById('hiddenBuilding');
+
+        // Update hidden building value
+        hiddenBuilding.value = building;
+
+        // Only apply restrictions for Student room type
+        if (roomType === 'Student') {
+            if (building === 'A') {
+                // Building A students can only be on floor 2
+                floorSelect.value = '2';
+                floorSelect.disabled = true;
+                hiddenFloor.value = '2';
+            } else {
+                // Building B students can be on floor 1 or 2
+                floorSelect.disabled = false;
+                hiddenFloor.value = ''; // Clear hidden field
+            }
+        }
+    }
+
+    // Update hidden fields before form submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const buildingSelect = document.getElementById('Building');
+        const floorSelect = document.getElementById('Floor');
+        const sizeSelect = document.getElementById('Size');
+
+        const hiddenBuilding = document.getElementById('hiddenBuilding');
+        const hiddenFloor = document.getElementById('hiddenFloor');
+        const hiddenSize = document.getElementById('hiddenSize');
+
+        // If the visible controls are disabled, use their values for the hidden fields
+        if (buildingSelect.disabled) {
+            hiddenBuilding.value = buildingSelect.value;
+        } else {
+            hiddenBuilding.value = ''; // Clear if not needed
+        }
+
+        if (floorSelect.disabled) {
+            hiddenFloor.value = floorSelect.value;
+        } else {
+            hiddenFloor.value = ''; // Clear if not needed
+        }
+
+        if (sizeSelect.disabled) {
+            hiddenSize.value = sizeSelect.value;
+        } else {
+            hiddenSize.value = ''; // Clear if not needed
+        }
+    });
+</script>

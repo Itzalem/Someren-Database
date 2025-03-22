@@ -1,68 +1,161 @@
 ﻿@model Someren_Database.Models.Room
-
 @{
-	ViewData["Title"] = "Create Room";
+    ViewData["Title"] = "Create Room";
 }
-
 <div class="container mt-4">
-	<h1>Create a New Room</h1>
+    <h1>Create a New Room</h1>
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+    <form asp-action="Create" method="post" id="createRoomForm">
+        <div class="form-group">
+            <label class="form-label" for="RoomType">Room Type</label>
+            <select class="form-control" id="RoomType" name="RoomType" required onchange="updateFormOptions()">
+                <option value="Student">Student</option>
+                <option value="Teacher">Teacher</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Building</label>
+            <select class="form-control" id="Building" name="Building" required onchange="updateFloorOptions()">
+                <option value="A">Building A</option>
+                <option value="B">Building B</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Floor">Floor</label>
+            <select class="form-control" id="Floor" name="Floor" required>
+                <option value="1">Floor 1 (ground floor)</option>
+                <option value="2">Floor 2</option>
+            </select>
+        </div>
 
-	@if (ViewBag.ErrorMessage != null)
-	{
-		<div class="alert alert-danger">
-			@ViewBag.ErrorMessage
-		</div>
-	}
+        <div class="form-group">
+            <label class="form-label">Room Number</label>
+            <input type="number" class="form-control" id="RoomNumber" name="RoomNumber" required />
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="Size">Number of beds</label>
+            <select class="form-control" id="Size" name="Size" required>
+                <option value="1">1</option>
+                <option value="8">8</option>
+            </select>
+        </div>
 
-	<form asp-action="Create" method="post">
-		
-		<div class="form-group">
-			<label class="form-label">Room Number</label>
-			<input type="number" class="form-control" id="RoomNumber" name="RoomNumber" required />
-		</div>
+        <!-- Hidden fields to store values when dropdowns are disabled -->
+        <input type="hidden" id="hiddenBuilding" name="Building" />
+        <input type="hidden" id="hiddenFloor" name="Floor" />
+        <input type="hidden" id="hiddenSize" name="Size" />
 
-		@*
-		<div class="form-group">
-			<label class="form-label">Room Type</label>
-			<input type="text" class="form-control" id="RoomType" name="RoomType" required />
-		</div>
-		*@
-
-		<div class="form-group">
-			<label class="form-label" for="RoomType">Room Type</label>
-			<select class="form-control" id="RoomType" name="RoomType" required>
-				<option value="Student">Student</option>
-				<option value="Teacher">Teacher</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label class="form-label">Building</label>
-			<select class="form-control" id="Building" name="Building" required>
-				<option value="A">Building A</option>
-				<option value="B">Building B</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="Floor">Floor</label>
-			<select class="form-control" id="Floor" name="Floor" required>
-				<option value="1">Floor 1</option>
-				<option value="2">Floor 2</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="Size">Number of beds</label>
-			<input type="number" class="form-control" id="Size" name="Size" required>
-		</div>
-
-		<button type="submit" asp-action="Create" asp-controller="Room" class="btn btn-primary mt-3">Create Room</button>
-	</form>
-
-	<form method="get" asp-controller="Room" asp-action="RoomIndex">
-		<button type="submit" class="btn btn-secondary mt-3">Back to Room List</button>
-	</form>
-
-
+        <button type="submit" class="btn btn-primary mt-3">Create Room</button>
+    </form>
+    <form method="get" asp-controller="Room" asp-action="RoomIndex">
+        <button type="submit" class="btn btn-secondary mt-3">Back to Room List</button>
+    </form>
 </div>
+
+<script>
+    // Run when the page loads to set initial state
+    document.addEventListener('DOMContentLoaded', function() {
+        updateFormOptions();
+    });
+
+    function updateFormOptions() {
+        const roomType = document.getElementById('RoomType').value;
+        const buildingSelect = document.getElementById('Building');
+        const floorSelect = document.getElementById('Floor');
+        const sizeSelect = document.getElementById('Size');
+
+        // Get hidden fields
+        const hiddenBuilding = document.getElementById('hiddenBuilding');
+        const hiddenFloor = document.getElementById('hiddenFloor');
+        const hiddenSize = document.getElementById('hiddenSize');
+
+        if (roomType === 'Teacher') {
+            // For teachers: single room, ground floor, building A
+            sizeSelect.value = '1';
+            buildingSelect.value = 'A';
+            floorSelect.value = '1';
+
+            // Store values in hidden fields
+            hiddenSize.value = '1';
+            hiddenBuilding.value = 'A';
+            hiddenFloor.value = '1';
+
+            // Disable visible selects
+            sizeSelect.disabled = true;
+            buildingSelect.disabled = true;
+            floorSelect.disabled = true;
+        } else {
+            // For students: 8 beds
+            sizeSelect.value = '8';
+            hiddenSize.value = '8';
+            sizeSelect.disabled = true;
+
+            // Enable building selection
+            buildingSelect.disabled = false;
+            hiddenBuilding.value = buildingSelect.value;
+
+            // Update floor options based on building
+            updateFloorOptions();
+        }
+    }
+
+    function updateFloorOptions() {
+        const roomType = document.getElementById('RoomType').value;
+        const building = document.getElementById('Building').value;
+        const floorSelect = document.getElementById('Floor');
+        const hiddenFloor = document.getElementById('hiddenFloor');
+        const hiddenBuilding = document.getElementById('hiddenBuilding');
+
+        // Update hidden building value
+        hiddenBuilding.value = building;
+
+        // Only apply restrictions for Student room type
+        if (roomType === 'Student') {
+            if (building === 'A') {
+                // Building A students can only be on floor 2
+                floorSelect.value = '2';
+                floorSelect.disabled = true;
+                hiddenFloor.value = '2';
+            } else {
+                // Building B students can be on floor 1 or 2
+                floorSelect.disabled = false;
+                hiddenFloor.value = floorSelect.value;
+            }
+        }
+    }
+
+    // Update hidden fields before form submission
+    document.getElementById('createRoomForm').addEventListener('submit', function(e) {
+        const buildingSelect = document.getElementById('Building');
+        const floorSelect = document.getElementById('Floor');
+        const sizeSelect = document.getElementById('Size');
+
+        const hiddenBuilding = document.getElementById('hiddenBuilding');
+        const hiddenFloor = document.getElementById('hiddenFloor');
+        const hiddenSize = document.getElementById('hiddenSize');
+
+        // If the visible controls are disabled, use their values for the hidden fields
+        if (buildingSelect.disabled) {
+            hiddenBuilding.value = buildingSelect.value;
+        } else {
+            hiddenBuilding.value = buildingSelect.value;
+        }
+
+        if (floorSelect.disabled) {
+            hiddenFloor.value = floorSelect.value;
+        } else {
+            hiddenFloor.value = floorSelect.value;
+        }
+
+        if (sizeSelect.disabled) {
+            hiddenSize.value = sizeSelect.value;
+        } else {
+            hiddenSize.value = sizeSelect.value;
+        }
+    });
+</script>

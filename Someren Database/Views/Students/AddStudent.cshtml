@@ -10,6 +10,7 @@
 	<div class="form-group py-2">
 		<label for="StudentNumber">Number:</label>
 		<input type="text" id="StudentNumber" name="StudentNumber" class="form-control" required value="@Model?.StudentNumber" />
+		<span asp-validation-for="StudentNumber" class="text-danger"></span>
 	</div>
 
 	<div class="form-group py-2">
@@ -35,12 +36,11 @@
 	<div class="form-group py-2">
 		<label asp-for="RoomNumber" class="control-label">Room:</label>
 		<select asp-for="RoomNumber" asp-items="(SelectList)ViewBag.RoomId" class="form-control">
-			<!--<option value="">Seleccione un cuarto</option>-->
 		</select>
 	</div>	
 
 	<button type="submit" class="btn btn-success">Save</button>
-	<a class="btn btn-warning" href="/Students/StudentsIndex">All Students</a>
+	<a class="btn btn-primary" href="/Students/StudentsIndex">All Students</a>
 </form>
 
 
