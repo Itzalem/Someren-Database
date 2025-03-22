@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Someren_Database.Models;
 using Someren_Database.Repositories;
 
@@ -13,12 +14,62 @@ namespace Someren_Database.Controllers
             _teachersRepository = teachersRepository;
         }
 
-        public IActionResult TeachersIndex()
+        public IActionResult TeachersIndex(string sortOrder)
         {
             List<Teacher> teachers = _teachersRepository.ListTeachers();
 
+            // Determine the order
+            ViewBag.TeacherIDSort = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewBag.RoomNumberSort = sortOrder == "room" ? "room_desc" : "room";
+            ViewBag.FirstNameSort = sortOrder == "first" ? "first_desc" : "first";
+            ViewBag.LastNameSort = sortOrder == "last" ? "last_desc" : "last";
+            ViewBag.PhoneSort = sortOrder == "phone" ? "phone_desc" : "phone";
+            ViewBag.AgeSort = sortOrder == "age" ? "age_desc" : "age";
+
+            // Do the sorting
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    teachers = teachers.OrderByDescending(t => t.TeacherID).ToList();
+                    break;
+                case "room":
+                    teachers = teachers.OrderBy(t => t.RoomNumber).ToList();
+                    break;
+                case "room_desc":
+                    teachers = teachers.OrderByDescending(t => t.RoomNumber).ToList();
+                    break;
+                case "first":
+                    teachers = teachers.OrderBy(t => t.FirstName).ToList();
+                    break;
+                case "first_desc":
+                    teachers = teachers.OrderByDescending(t => t.FirstName).ToList();
+                    break;
+                case "last":
+                    teachers = teachers.OrderBy(t => t.LastName).ToList();
+                    break;
+                case "last_desc":
+                    teachers = teachers.OrderByDescending(t => t.LastName).ToList();
+                    break;
+                case "phone":
+                    teachers = teachers.OrderBy(t => t.PhoneNumber).ToList();
+                    break;
+                case "phone_desc":
+                    teachers = teachers.OrderByDescending(t => t.PhoneNumber).ToList();
+                    break;
+                case "age":
+                    teachers = teachers.OrderBy(t => t.Age).ToList();
+                    break;
+                case "age_desc":
+                    teachers = teachers.OrderByDescending(t => t.Age).ToList();
+                    break;
+                default:
+                    teachers = teachers.OrderBy(t => t.TeacherID).ToList();
+                    break;
+            }
+
             return View(teachers);
         }
+
 
         [HttpGet]
         public IActionResult AddTeacher()
@@ -38,10 +89,10 @@ namespace Someren_Database.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 return View(teacher);
             }
         }
+
 
 
         [HttpGet]
@@ -56,7 +107,7 @@ namespace Someren_Database.Controllers
             return View(teacher);
         }
 
-      
+
         [HttpPost]
         public IActionResult UpdateTeacher(Teacher teacher)
         {
@@ -102,4 +153,4 @@ namespace Someren_Database.Controllers
 
 
     }
-}
+} 

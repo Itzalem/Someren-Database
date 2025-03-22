@@ -11,5 +11,7 @@ namespace Someren_Database.Repositories
         void UpdateTeacher(Teacher user);
         void DeleteTeacher(Teacher user);
 
+
+
     }
 }

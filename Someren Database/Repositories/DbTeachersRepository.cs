@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Someren_Database.Models;
 
 namespace Someren_Database.Repositories
@@ -13,11 +14,11 @@ namespace Someren_Database.Repositories
             if (string.IsNullOrEmpty(_connectionString))
             {
                 _connectionString = "Server=your_server;Database=your_database;User Id=your_user;Password=your_password;";
-                
+
             }
             else
             {
-                Console.WriteLine($"_connectionString: {_connectionString}"); //c
+                Console.WriteLine($"_connectionString: {_connectionString}"); 
             }
         }
 
@@ -29,7 +30,7 @@ namespace Someren_Database.Repositories
             string lastName = (string)reader["lastName"];
             string phoneNumber = (string)reader["phoneNumber"];
             int age = (int)reader["age"];
-            
+
 
             return new Teacher(teacherID, roomNumber, firstName, lastName, phoneNumber, age);
         }
@@ -49,7 +50,7 @@ namespace Someren_Database.Repositories
 
                 if (reader.Read())
                 {
-                    Teacher teacher = ReadTeacher(reader); 
+                    Teacher teacher = ReadTeacher(reader);
                     reader.Close();
                     return teacher;
                 }
@@ -68,7 +69,7 @@ namespace Someren_Database.Repositories
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = "SELECT TeacherID, RoomNumber, firstName, lastName, phoneNumber, age " +
-                                "FROM Teachers ORDER BY LastName"; //c
+                                "FROM Teachers ORDER BY LastName"; 
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -102,9 +103,9 @@ namespace Someren_Database.Repositories
                 command.Parameters.AddWithValue("@LastName", teacher.LastName);
                 command.Parameters.AddWithValue("@PhoneNumber", teacher.PhoneNumber);
                 command.Parameters.AddWithValue("@Age", teacher.Age);
-               
-          
-              
+
+
+
 
                 command.Connection.Open();
                 int rowsChanged = command.ExecuteNonQuery();
@@ -126,7 +127,7 @@ namespace Someren_Database.Repositories
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                
+
                 command.Parameters.AddWithValue("@ChangedTeacherID", teacher.TeacherID);
                 command.Parameters.AddWithValue("@FirstName", teacher.FirstName);
                 command.Parameters.AddWithValue("@LastName", teacher.LastName);
@@ -160,5 +161,7 @@ namespace Someren_Database.Repositories
                     throw new Exception("No teachers deleted");
             }
         }
+
+        
     }
 }

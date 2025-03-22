@@ -1,46 +1,75 @@
 ﻿@model List<Someren_Database.Models.Teacher>
 
 @{
-	ViewData["Title"] = "Teacher";
+    ViewData["Title"] = "Teachers List";
 }
 
-<div class="text-center">
-	<h1 class="display-4">Teachers</h1>
-</div>
+<h1>Teachers</h1>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>ID</th>
-			<th>Room</th>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Phone Number</th>
-			<th>Age</th>
-		</tr>
-	</thead>
-	<tbody>
-		@{
-			foreach (var teacher in Model)
-			{
-				<tr>
-					<td>@teacher.TeacherID</td>
-					<td>@teacher.RoomNumber</td>
-					<td>@teacher.FirstName</td>
-					<td>@teacher.LastName</td>
-					<td>@teacher.PhoneNumber</td>
-					<td>@teacher.Age</td>
-					
-					<td><a asp-controller="Teachers" asp-action="UpdateTeacher" asp-route-teacherID="@teacher.TeacherID">Edit</a></td>
-					<td><a asp-controller="Teachers" asp-action="DeleteTeacher" asp-route-teacherID="@teacher.TeacherID">Delete</a></td>
-				</tr>
-			}
-		}
-	</tbody>
 
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.TeacherIDSort">
+                    ID @(ViewBag.TeacherIDSort == "id_desc" ? "⬇️" : "⬆️")
+                </a>
+            </th>
+
+            <th>
+                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.RoomNumberSort">
+                    Room @(ViewBag.RoomNumberSort == "room_desc" ? "⬇️" : "⬆️")
+                </a>
+            </th>
+
+            <th>
+                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.FirstNameSort">
+                    First Name @(ViewBag.FirstNameSort == "first_desc" ? "⬇️" : "⬆️")
+                </a>
+            </th>
+
+            <th>
+                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.LastNameSort">
+                    Last Name @(ViewBag.LastNameSort == "last_desc" ? "⬇️" : "⬆️")
+                </a>
+            </th>
+
+            <th>
+                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.PhoneSort">
+                    Phone @(ViewBag.PhoneSort == "phone_desc" ? "⬇️" : "⬆️")
+                </a>
+            </th>
+
+            <th>
+                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.AgeSort">
+                    Age @(ViewBag.AgeSort == "age_desc" ? "⬇️" : "⬆️")
+                </a>
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var teacher in Model)
+        {
+            <tr>
+                <td>@teacher.TeacherID</td>
+                <td>@teacher.RoomNumber</td>
+                <td>@teacher.FirstName</td>
+                <td>@teacher.LastName</td>
+                <td>@teacher.PhoneNumber</td>
+                <td>@teacher.Age</td>
+
+                <td> <a asp-action="UpdateTeacher" asp-route-teacherID="@teacher.TeacherID" class="btn btn-warning btn-sm">Edit</a> </td>
+                <td>
+                    <a asp-action="DeleteTeacher" asp-route-teacherID="@teacher.TeacherID" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+                
+            </tr>
+        }
+    </tbody>
 </table>
 
-<div class="text-center mt-4">
-	<a asp-action="AddTeacher" asp-controller="Teachers" class="btn btn-success">Create New Teacher</a>
-</div>
 
+<p>
+    <a asp-action="AddTeacher" class="btn btn-primary">Create New Teacher</a>
+</p>
