@@ -148,9 +148,8 @@ namespace Someren_Database.Repositories
 					throw new Exception("No students updated");
 			}
 		}
-
  
-		public void DeleteStudent(Student student)
+		public void DeleteStudent(Student student) //soft delete, I want to keep the records in the database
 		{
 			using (SqlConnection connection = new SqlConnection(_connectionString))
 			{
