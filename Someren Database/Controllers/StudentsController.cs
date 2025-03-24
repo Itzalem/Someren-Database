@@ -55,7 +55,7 @@ namespace Someren_Database.Controllers
 				var existingStudent = _studentsRepository.GetByStudentNumber(student.StudentNumber);
 				if (existingStudent != null)
 				{
-					ModelState.AddModelError("StudentNumber", "That number was already assigned to a student, please choose a new one");
+					ModelState.AddModelError("StudentNumber", "That number is assigned to a student or was already used in the past, please choose a new one");
 				}
 				else
 				{
