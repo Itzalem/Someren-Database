@@ -7,12 +7,15 @@ namespace Someren_Database.Repositories
     public class RoomRepository : IRoomRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IStudentsRepository _studentsRepository;
+        private readonly ITeachersRepository _teachersRepository;
 
-        public RoomRepository(ApplicationDbContext context)
+        public RoomRepository(ApplicationDbContext context, IStudentsRepository studentsRepository, ITeachersRepository teachersRepository)
         {
             _context = context;
+            _studentsRepository = studentsRepository;
+            _teachersRepository = teachersRepository;
         }
-
 
         public async Task AddRoomAsync(Room room)
         {
@@ -25,6 +28,15 @@ namespace Someren_Database.Repositories
             var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomNumber == roomNumber);
             if (room != null)
             {
+                // Check if there are any students or teachers assigned to this room
+                bool hasStudents = _studentsRepository.ListStudents("").Any(s => s.RoomNumber == roomNumber);
+                bool hasTeachers = _teachersRepository.ListTeachers().Any(t => t.RoomNumber == roomNumber);
+
+                if (hasStudents || hasTeachers)
+                {
+                    return null; // Indicate that deletion is not allowed
+                }
+
                 _context.Rooms.Remove(room);
                 await _context.SaveChangesAsync();
                 return room;  // Return the deleted room (optional)
@@ -70,5 +82,6 @@ namespace Someren_Database.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
     }
 }

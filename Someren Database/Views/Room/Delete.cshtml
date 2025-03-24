@@ -34,5 +34,10 @@
         <button type="submit" class="btn btn-danger mt-3">Delete</button>
         <a asp-action="RoomIndex" class="btn btn-secondary mt-3">Cancel</a>
     </form>
+
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger mt-4">@ViewBag.ErrorMessage</div>
+    }
 </div>
 
