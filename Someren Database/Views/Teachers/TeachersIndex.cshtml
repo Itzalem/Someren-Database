@@ -10,41 +10,17 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.TeacherIDSort">
-                    ID @(ViewBag.TeacherIDSort == "id_desc" ? "⬇️" : "⬆️")
-                </a>
-            </th>
+            <th>ID</th>
 
-            <th>
-                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.RoomNumberSort">
-                    Room @(ViewBag.RoomNumberSort == "room_desc" ? "⬇️" : "⬆️")
-                </a>
-            </th>
+            <th> Room</th>
 
-            <th>
-                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.FirstNameSort">
-                    First Name @(ViewBag.FirstNameSort == "first_desc" ? "⬇️" : "⬆️")
-                </a>
-            </th>
+            <th>First Name</th>
 
-            <th>
-                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.LastNameSort">
-                    Last Name @(ViewBag.LastNameSort == "last_desc" ? "⬇️" : "⬆️")
-                </a>
-            </th>
+            <th>Last Name</th>
 
-            <th>
-                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.PhoneSort">
-                    Phone @(ViewBag.PhoneSort == "phone_desc" ? "⬇️" : "⬆️")
-                </a>
-            </th>
+            <th>Phone</th>
 
-            <th>
-                <a asp-action="TeachersIndex" asp-route-sortOrder="@ViewBag.AgeSort">
-                    Age @(ViewBag.AgeSort == "age_desc" ? "⬇️" : "⬆️")
-                </a>
-            </th>
+            <th>Age</th>
 
         </tr>
     </thead>
@@ -63,7 +39,7 @@
                 <td>
                     <a asp-action="DeleteTeacher" asp-route-teacherID="@teacher.TeacherID" class="btn btn-danger btn-sm">Delete</a>
                 </td>
-                
+
             </tr>
         }
     </tbody>
@@ -71,5 +47,5 @@
 
 
 <p>
-    <a asp-action="AddTeacher" class="btn btn-primary">Create New Teacher</a>
+    <a asp-action="AddTeacher" asp-controller="Teachers" class="btn btn-success">Create New Teacher</a>
 </p>

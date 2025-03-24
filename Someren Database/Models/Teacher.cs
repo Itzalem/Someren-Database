@@ -10,9 +10,7 @@
         public string PhoneNumber { get; set; }
         public int Age { get; set; }
 
-     
-        public int OriginalTeacherID { get; set; } 
-
+        public int OriginalTeacherID { get; set; }
 
         public Teacher()
         {
