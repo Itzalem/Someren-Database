@@ -1,0 +1,66 @@
+﻿@model Someren_Database.ViewModels.Drink_StudentViewModel
+
+@{
+	ViewData["Title"] = "Drinks";
+}
+
+<div class="text-center">
+	<h1>Drinks</h1>
+</div>
+
+<div class="container mx-auto" style="max-width:90%;">
+	<table class="table table-hover table-striped table-bordered">
+		<thead>
+			<tr>
+				<th>Drink</th>
+				<th>Type</th>
+				<th>Stock</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				foreach (var drink in Model.Drinks)
+				{
+					<tr>
+						<td>@drink.Name</td>
+						<td>@drink.Type</td>
+						<td>@drink.StockOfDrink</td>						
+					</tr>
+				}
+			}
+		</tbody>
+
+	</table>
+</div>
+
+<div class="text-center">
+	<h1>Students</h1>
+</div>
+
+<div class="container mx-auto" style="max-width:90%;">
+	<table class="table table-hover table-striped table-bordered">
+		<thead>
+			<tr>
+				<th>Student Number</th>
+				<th>Name</th>
+				<th>Last Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				foreach (var student in Model.Students)
+				{
+					<tr>
+						<td>@student.StudentNumber</td>
+						<td>@student.FirstName</td>
+						<td>@student.LastName</td>
+					</tr>
+				}
+			}
+		</tbody>
+
+	</table>
+</div>
+
+
+<a href="/Drinks/OrderDrinks" class="btn btn-primary"> OrderDrinks</a>

@@ -162,10 +162,12 @@ namespace Someren_Database.Controllers
         {
             try
             {
-                var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber);
-                if (room != null)
+                var deletedRoom = await _roomReposiroty.DeleteRoomAsync(roomNumber);
+
+                if (deletedRoom == null)
                 {
-                    await _roomReposiroty.DeleteRoomAsync(roomNumber);
+                    ViewBag.ErrorMessage = "Can't delete room because there is a person assigned to it.";
+                    return View("Delete", await _roomReposiroty.GetRoomByIdAsync(roomNumber));
                 }
             }
             catch (Exception ex)
