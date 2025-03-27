@@ -16,7 +16,6 @@ namespace Someren_Database.Repositories
 
 			}
 		}
-
 		private Drink ReadDrink(SqlDataReader reader)
 		{
 			int drinkId = (int)reader["drink_id"];
