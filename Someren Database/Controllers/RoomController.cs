@@ -20,27 +20,22 @@ namespace Someren_Database.Controllers
 
             try
             {
-                // Set default room type if null or empty
                 if (string.IsNullOrEmpty(roomType))
                 {
                     roomType = "All";
                 }
 
-                // Store the selected room type in ViewBag for the dropdown
                 ViewBag.SelectedRoomType = roomType;
 
                 if (roomNumber.HasValue)
                 {
-                    // Search by RoomNumber using GetRoomByIdAsync
                     var room = await _roomReposiroty.GetRoomByIdAsync(roomNumber.Value);
-                    rooms = room != null ? new List<Room> { room } : new List<Room>(); // Return the found room or an empty list if not found
+                    rooms = room != null ? new List<Room> { room } : new List<Room>(); 
                 }
                 else
                 {
-                    // Show all rooms if no search query
                     rooms = await _roomReposiroty.GetAllRoomsAsync();
 
-                    // Filter by room type if not "All"
                     if (roomType != "All")
                     {
                         rooms = rooms.Where(r => r.RoomType == roomType).ToList();
@@ -70,17 +65,14 @@ namespace Someren_Database.Controllers
             {
                 if (room != null && ModelState.IsValid)
                 {
-                    // Check if the room number already exists
                     var existingRoom = await _roomReposiroty.GetRoomByIdAsync(room.RoomNumber);
 
                     if (existingRoom != null)
                     {
-                        // If the room number exists, set an error message and return to the create view
                         ViewBag.ErrorMessage = "Room number already exists.";
                         return View(room);
                     }
 
-                    // Add room to db
                     await _roomReposiroty.AddRoomAsync(room);
                     return RedirectToAction("RoomIndex");
                 }
@@ -90,7 +82,6 @@ namespace Someren_Database.Controllers
                 ViewBag.ErrorMessage = "An error occured while creating the rooms.";
             }
 
-            // Return to create view if room is not valid
             return View(room);
         }
 

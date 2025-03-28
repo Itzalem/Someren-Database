@@ -10,7 +10,5 @@ namespace Someren_Database.Data
         { }
 
         public DbSet<Room> Rooms { get; set; }
-
-        public DbSet<Activity> Activity { get; set; }
     }
 }
