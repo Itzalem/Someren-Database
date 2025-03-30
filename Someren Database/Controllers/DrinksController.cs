@@ -55,11 +55,12 @@ namespace Someren_Database.Controllers
 
 
         [HttpPost]
-		public ActionResult OrderDrinks(Order order)
+		public ActionResult OrderDrinks(Order order, Drink drink)
 		{			
 			try
 			{
 				_drinksRepository.AddOrder(order);
+				_drinksRepository.ReduceStock(order, drink);
 				return RedirectToAction("DrinksIndex");
 			}
 			catch (Exception ex)

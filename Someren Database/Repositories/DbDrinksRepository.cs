@@ -82,5 +82,29 @@ namespace Someren_Database.Repositories
 			}
 
 		}
+
+		public void ReduceStock (Order order, Drink drink)
+		{
+			using (SqlConnection connection = new SqlConnection(_connectionString))
+			{
+				string query = "UPDATE Drinks " +
+							"SET stockOfDrink = stockOfDrink - @amount " +
+                            "WHERE drink_id = @drink_id; ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@amount", order.Amount);
+                command.Parameters.AddWithValue("@drink_id", drink.DrinkId);
+
+                command.Connection.Open();
+
+                int rowsChanged = command.ExecuteNonQuery();
+                if (rowsChanged != 1)
+                {
+                    throw new Exception("Stock not updated");
+                }
+            }
+
+        }
 	}
 }

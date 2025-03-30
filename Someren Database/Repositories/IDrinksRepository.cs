@@ -6,5 +6,6 @@ namespace Someren_Database.Repositories
 	{
 		List<Drink> ListDrinks();
 		void AddOrder(Order order); 
+		void ReduceStock(Order order, Drink drink);
 	}
 }
