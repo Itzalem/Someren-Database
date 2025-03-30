@@ -51,5 +51,36 @@ namespace Someren_Database.Repositories
 			return drinks;
 
 		}
+
+		public void AddOrder(Order order)
+		{
+			using (SqlConnection connection = new SqlConnection(_connectionString))
+			{
+				string query = $"INSERT INTO Orders (studentNumber, drink_id, amount) " +
+								$"VALUES (@studentNumber, @drink_id, @amount);" +
+								$"SELECT SCOPE_IDENTITY();";
+
+				SqlCommand command = new SqlCommand(query, connection);
+
+				command.Parameters.AddWithValue("@studentNumber", order.StudentNumber);
+				command.Parameters.AddWithValue("@drink_id", order.DrinkId);
+				command.Parameters.AddWithValue("@amount", order.Amount);
+
+				command.Connection.Open();
+
+				//to get the identity value of the scope 
+				object result = command.ExecuteScalar(); 
+				if (result != null)
+				{
+					order.OrderId = Convert.ToInt32(result);
+				}
+				else
+				{
+					throw new Exception("Ordering failed");
+				}
+
+			}
+
+		}
 	}
 }
