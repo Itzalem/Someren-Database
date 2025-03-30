@@ -1,0 +1,45 @@
+﻿@model Someren_Database.Models.ActivityParticipantsViewModel
+
+<h2>Manage Participants for Activity: @Model.Activity.ActivityName</h2>
+
+<h3>Participants:</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var participant in Model.Participants)
+        {
+            <tr>
+                <td>@participant.LastName</td>
+                <td>
+                    <a href="@Url.Action("RemoveParticipant", "ActivityParticipant", new { activityId = Model.Activity.ActivityId, studentId = participant.StudentNumber })">Remove</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Non-Participants:</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var nonParticipant in Model.NonParticipants)
+        {
+            <tr>
+                <td>@nonParticipant.LastName</td>
+                <td>
+                    <a href="@Url.Action("AddParticipant", "ActivityParticipant", new { activityId = Model.Activity.ActivityId, studentId = nonParticipant.StudentNumber })">Add</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

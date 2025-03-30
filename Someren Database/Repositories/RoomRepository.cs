@@ -28,18 +28,17 @@ namespace Someren_Database.Repositories
             var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomNumber == roomNumber);
             if (room != null)
             {
-                // Check if there are any students or teachers assigned to this room
                 bool hasStudents = _studentsRepository.ListStudents("").Any(s => s.RoomNumber == roomNumber);
                 bool hasTeachers = _teachersRepository.ListTeachers().Any(t => t.RoomNumber == roomNumber);
 
                 if (hasStudents || hasTeachers)
                 {
-                    return null; // Indicate that deletion is not allowed
+                    return null;
                 }
 
                 _context.Rooms.Remove(room);
                 await _context.SaveChangesAsync();
-                return room;  // Return the deleted room (optional)
+                return room;  
             }
 
             return null;
@@ -61,20 +60,16 @@ namespace Someren_Database.Repositories
 
             if (existingRoom != null)
             {
-                // Update the room properties with the new values
                 existingRoom.RoomType = room.RoomType;
                 existingRoom.Building = room.Building;
                 existingRoom.Floor = room.Floor;
                 existingRoom.Size = room.Size;
 
-                // Save changes to the database
                 await _context.SaveChangesAsync();
 
-                // Return the updated room
                 return existingRoom;
             }
 
-            // If room is not found, you could throw an exception or return null
             throw new Exception("Room not found.");
         }
 

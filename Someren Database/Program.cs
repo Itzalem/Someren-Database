@@ -15,16 +15,14 @@ namespace Someren_Database
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString("Someren_Database")));
 
-			// Register IRoomRepository/IStudentsRepository with RoomRepository/DbStudentsRepository
-			// for dependency injection
-			builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-            builder.Services.AddScoped<IActivityRepository, DbActivityRepository>();
+            // Register IRoomRepository/IStudentsRepository with RoomRepository/DbStudentsRepository
+            // for dependency injection
+            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+            builder.Services.AddSingleton<IActivityRepository, DbActivityRepository>();
 			builder.Services.AddSingleton<IStudentsRepository, DbStudentsRepository>(); 
 			builder.Services.AddSingleton<ITeachersRepository, DbTeachersRepository>();
 			builder.Services.AddSingleton<IDrinksRepository, DbDrinksRepository>();
             builder.Services.AddControllersWithViews();		
-		
-
 
 			var app = builder.Build();
 
