@@ -6,7 +6,7 @@ namespace Someren_Database.Repositories
 	{
 		List<Drink> ListDrinks();
 		Drink GetDrinkById(int drinkId);
-        
+		int GetStockById(int drinkId);
 		void AddOrder(Order order); 
 		void ReduceStock(Order order, Drink drink);
 	}

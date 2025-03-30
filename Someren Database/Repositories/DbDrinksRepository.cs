@@ -55,7 +55,24 @@ namespace Someren_Database.Repositories
 
         }
 
-		public List<Drink> ListDrinks()
+		public int GetStockById(int drinkId)
+		{
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT stockOfDrink " +
+                    "FROM Drinks WHERE drink_id = @drinkId;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@drinkId", drinkId);
+
+                connection.Open();
+                object stock = command.ExecuteScalar();
+
+				return Convert.ToInt32(stock);
+            }
+        }
+
+        public List<Drink> ListDrinks()
 		{
 			List<Drink> drinks = new List<Drink>();
 			using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -117,7 +134,7 @@ namespace Someren_Database.Repositories
 			{
 				string query = "UPDATE Drinks " +
 							"SET stockOfDrink = stockOfDrink - @amount " +
-                            "WHERE drink_id = @drink_id; ";
+                            "WHERE drink_id = @drink_id ";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
