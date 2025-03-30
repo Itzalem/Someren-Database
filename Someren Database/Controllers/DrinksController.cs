@@ -43,24 +43,60 @@ namespace Someren_Database.Controllers
                 FullName = student.FirstName + " " + student.LastName
             });
 
-            // Se crea el SelectList: el primer parámetro es la colección, 
-            // el segundo es el nombre de la propiedad para el Value y el tercero para el Text.
             ViewBag.StudentsList = new SelectList(studentForSelect, "StudentNumber", "FullName");
 
-            // Para las bebidas se supone que el objeto Drink tiene las propiedades DrinkId y Name.
             ViewBag.DrinksList = new SelectList(drinks, "DrinkId", "Name");
 
             return View();
 		}
 
+        [HttpPost]
+        public ActionResult OrderDrinks (Order order)
+		{
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("ProcessOrder", new
+                {
+                    studentNumber = order.StudentNumber,
+                    drinkId = order.DrinkId,
+                    amount = order.Amount
+                });
+
+            }
+            return View(order);
+		}
+
+		[HttpGet]
+		public ActionResult ProcessOrder(int studentNumber, int drinkId, int amount)
+		{            
+            Order order = new Order 
+            { 
+                StudentNumber = studentNumber, 
+                DrinkId = drinkId, 
+                Amount = amount 
+            };
+
+            // Utilizas los repositorios para obtener el Student y el Drink completos.
+            Student student = _studentsRepository.GetByStudentNumber(studentNumber);
+            Drink drink = _drinksRepository.GetDrinkById(drinkId);
+
+            OrderStudentDrinkViewmodel viewModel = new OrderStudentDrinkViewmodel
+            {
+                Order = order,
+				Drink = drink,
+				Student = student
+            };
+
+            return View(viewModel);
+		}       
 
         [HttpPost]
-		public ActionResult OrderDrinks(Order order, Drink drink)
+        public ActionResult ProcessOrder(OrderStudentDrinkViewmodel viewmodel)
 		{			
 			try
 			{
-				_drinksRepository.AddOrder(order);
-				_drinksRepository.ReduceStock(order, drink);
+                _drinksRepository.AddOrder(viewmodel.Order);
+				_drinksRepository.ReduceStock(viewmodel.Order, viewmodel.Drink);
 				return RedirectToAction("DrinksIndex");
 			}
 			catch (Exception ex)
@@ -68,7 +104,7 @@ namespace Someren_Database.Controllers
                 Console.WriteLine(ex.Message);
 			}
 
-			return View(order);
+			return View(viewmodel.Order);
 		}
     }
     

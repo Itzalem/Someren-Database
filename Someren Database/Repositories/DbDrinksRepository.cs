@@ -27,6 +27,34 @@ namespace Someren_Database.Repositories
 			return new Drink(drinkId, name, vat, stockOfDrink, type);
 		}
 
+		public Drink GetDrinkById(int drinkId)
+		{
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT drink_id, name, vat, stockOfDrink, type " +
+                    "FROM Drinks WHERE drink_id = @drinkId;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@drinkId", drinkId);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    Drink drink = ReadDrink(reader);
+                    reader.Close();
+                    return drink;
+                }
+                else
+                {
+                    reader.Close();
+                    return null;
+                }
+            }
+
+        }
+
 		public List<Drink> ListDrinks()
 		{
 			List<Drink> drinks = new List<Drink>();
