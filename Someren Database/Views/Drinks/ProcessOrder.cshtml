@@ -1,0 +1,30 @@
+﻿@model Someren_Database.ViewModels.OrderStudentDrinkViewmodel
+    
+@{
+	ViewData["Title"] = "Confirm Order";
+}
+
+<form action="/Drinks/ProcessOrder" method="POST">
+    @if (ViewBag.OrderError != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.OrderError
+        </div>
+    }
+
+    <input type="hidden" asp-for="Order.StudentNumber" />
+    <input type="hidden" asp-for="Order.DrinkId" />
+    <input type="hidden" asp-for="Order.Amount" />
+    <input type="hidden" asp-for="Drink.DrinkId" />  
+
+    <div>
+        <p>Name: @Model.Student.FirstName</p>
+        <P>Last Name: @Model.Student.LastName</P>
+        <p>Drink: @Model.Drink.Name</p>
+        <p>Amount: @Model.Order.Amount</p>
+    </div>
+
+    <button type="submit">Confirm Order</button>
+</form>
+
+<a href="/Drinks/OrderDrinks" class="btn btn-primary">Cancel</a>

@@ -31,5 +31,101 @@ namespace Someren_Database.Controllers
 
 			return View(viewModel);
         }
+
+		[HttpGet]
+		public ActionResult OrderDrinks(string lastNameFilter = null)
+		{
+            var students = _studentsRepository.ListStudents(lastNameFilter); 
+            var drinks = _drinksRepository.ListDrinks();
+
+            var studentForSelect = students.Select(student => new {
+                student.StudentNumber,
+                FullName = student.FirstName + " " + student.LastName
+            });
+
+            ViewBag.StudentsList = new SelectList(studentForSelect, "StudentNumber", "FullName");
+
+            ViewBag.DrinksList = new SelectList(drinks, "DrinkId", "Name");
+
+            return View();
+		}
+
+        [HttpPost]
+        public ActionResult OrderDrinks (Order order)
+		{            
+            if (ModelState.IsValid)
+            {                
+                return RedirectToAction("ProcessOrder", new
+                {
+                    studentNumber = order.StudentNumber,
+                    drinkId = order.DrinkId,
+                    amount = order.Amount
+                });
+
+            }
+            return View(order);
+		}
+        
+				
+
+    [HttpGet]
+		public ActionResult ProcessOrder(int studentNumber, int drinkId, int amount)
+		{            
+            Order order = new Order 
+            { 
+                StudentNumber = studentNumber, 
+                DrinkId = drinkId, 
+                Amount = amount 
+            };
+
+            // Utilizas los repositorios para obtener el Student y el Drink completos.
+            Student student = _studentsRepository.GetByStudentNumber(studentNumber);
+            
+            Drink drink = _drinksRepository.GetDrinkById(drinkId);
+
+            OrderStudentDrinkViewmodel viewModel = new OrderStudentDrinkViewmodel
+            {
+                Order = order,
+				Drink = drink,
+				Student = student
+            };
+
+            return View(viewModel);
+		}       
+
+        [HttpPost]
+        public ActionResult ProcessOrder(OrderStudentDrinkViewmodel viewmodel)
+		{
+            try
+            {
+                int drinkStock = _drinksRepository.GetStockById(viewmodel.Drink.DrinkId);
+
+                if (viewmodel.Order.Amount > drinkStock)
+                {
+                    ViewBag.OrderError = $"Sorry, order not processed due to insufficient stock." +
+                                         $"Drink: {viewmodel.Drink.Name} Available stock: {drinkStock}";
+
+                    viewmodel.Drink = _drinksRepository.GetDrinkById(viewmodel.Order.DrinkId);
+                    viewmodel.Student = _studentsRepository.GetByStudentNumber(viewmodel.Order.StudentNumber);
+
+                    return View("OrderDrinks", viewmodel.Order);
+                }
+
+
+                _drinksRepository.AddOrder(viewmodel.Order);
+                _drinksRepository.ReduceStock(viewmodel.Order, viewmodel.Drink);
+                return RedirectToAction("DrinksIndex");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                ModelState.AddModelError("", "Sorry, unexpected error while processing the order, try again please.");
+ 
+                return View("OrderDrinks", viewmodel.Order);
+            }
+
+            
+		}
     }
+    
 }
