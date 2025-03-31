@@ -53,7 +53,6 @@
 </div>
 
 <script>
-    // Run when the page loads to set initial state
     document.addEventListener('DOMContentLoaded', function() {
         updateFormOptions();
     });
@@ -64,37 +63,30 @@
         const floorSelect = document.getElementById('Floor');
         const sizeSelect = document.getElementById('Size');
 
-        // Get hidden fields
         const hiddenBuilding = document.getElementById('hiddenBuilding');
         const hiddenFloor = document.getElementById('hiddenFloor');
         const hiddenSize = document.getElementById('hiddenSize');
 
         if (roomType === 'Teacher') {
-            // For teachers: single room, ground floor, building A
             sizeSelect.value = '1';
             buildingSelect.value = 'A';
             floorSelect.value = '1';
 
-            // Make visible fields readonly instead of disabled
             sizeSelect.disabled = true;
             buildingSelect.disabled = true;
             floorSelect.disabled = true;
 
-            // Set hidden fields with correct values
             hiddenSize.value = '1';
             hiddenBuilding.value = 'A';
             hiddenFloor.value = '1';
         } else {
-            // For students: 8 beds
             sizeSelect.value = '8';
             sizeSelect.disabled = true;
             hiddenSize.value = '8';
 
-            // Enable building selection
             buildingSelect.disabled = false;
-            hiddenBuilding.value = ''; // Clear hidden field
+            hiddenBuilding.value = ''; 
 
-            // Update floor options based on building
             updateFloorOptions();
         }
     }
@@ -106,25 +98,20 @@
         const hiddenFloor = document.getElementById('hiddenFloor');
         const hiddenBuilding = document.getElementById('hiddenBuilding');
 
-        // Update hidden building value
         hiddenBuilding.value = building;
 
-        // Only apply restrictions for Student room type
         if (roomType === 'Student') {
             if (building === 'A') {
-                // Building A students can only be on floor 2
                 floorSelect.value = '2';
                 floorSelect.disabled = true;
                 hiddenFloor.value = '2';
             } else {
-                // Building B students can be on floor 1 or 2
                 floorSelect.disabled = false;
-                hiddenFloor.value = ''; // Clear hidden field
+                hiddenFloor.value = ''; 
             }
         }
     }
 
-    // Update hidden fields before form submission
     document.querySelector('form').addEventListener('submit', function(e) {
         const buildingSelect = document.getElementById('Building');
         const floorSelect = document.getElementById('Floor');
@@ -134,23 +121,22 @@
         const hiddenFloor = document.getElementById('hiddenFloor');
         const hiddenSize = document.getElementById('hiddenSize');
 
-        // If the visible controls are disabled, use their values for the hidden fields
         if (buildingSelect.disabled) {
             hiddenBuilding.value = buildingSelect.value;
         } else {
-            hiddenBuilding.value = ''; // Clear if not needed
+            hiddenBuilding.value = '';
         }
 
         if (floorSelect.disabled) {
             hiddenFloor.value = floorSelect.value;
         } else {
-            hiddenFloor.value = ''; // Clear if not needed
+            hiddenFloor.value = ''; 
         }
 
         if (sizeSelect.disabled) {
             hiddenSize.value = sizeSelect.value;
         } else {
-            hiddenSize.value = ''; // Clear if not needed
+            hiddenSize.value = '';
         }
     });
 </script>
