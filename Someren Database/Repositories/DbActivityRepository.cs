@@ -160,7 +160,7 @@ namespace Someren_Database.Repositories
             {
                 await conn.OpenAsync();
                 string query = @"DELETE FROM ActivityParticipant 
-                         WHERE activity_id = @ActivityId AND studentNumber = @StudentId"; // Use correct column names
+                         WHERE activity_id = @ActivityId AND studentNumber = @StudentId";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
