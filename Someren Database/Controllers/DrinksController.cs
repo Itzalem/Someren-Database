@@ -109,8 +109,6 @@ namespace Someren_Database.Controllers
             };
 
             return View(viewModel);
-
-
         }
 
         [HttpPost]
@@ -129,11 +127,6 @@ namespace Someren_Database.Controllers
 
                 return View("OrderDrinks", viewmodel.Order);
             }
-
-
-        }
-
-       
-	}
-    
+        }       
+	}    
 }
