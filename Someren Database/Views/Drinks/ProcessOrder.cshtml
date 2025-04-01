@@ -5,13 +5,7 @@
 }
 
 <form action="/Drinks/ProcessOrder" method="POST">
-    @if (ViewBag.OrderError != null)
-    {
-        <div class="alert alert-danger">
-            @ViewBag.OrderError
-        </div>
-    }
-
+   
     <input type="hidden" asp-for="Order.StudentNumber" />
     <input type="hidden" asp-for="Order.DrinkId" />
     <input type="hidden" asp-for="Order.Amount" />

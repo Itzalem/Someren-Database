@@ -52,23 +52,43 @@ namespace Someren_Database.Controllers
 
         [HttpPost]
         public ActionResult OrderDrinks (Order order)
-		{            
-            if (ModelState.IsValid)
-            {                
-                return RedirectToAction("ProcessOrder", new
-                {
-                    studentNumber = order.StudentNumber,
-                    drinkId = order.DrinkId,
-                    amount = order.Amount
-                });
+		{
+            try
+            {
+                //to show the user the available amount without going back to the list
+                int stock = _drinksRepository.GetStockById(order.DrinkId); 
+                Drink drink = _drinksRepository.GetDrinkById(order.DrinkId);
 
+                if (ModelState.IsValid)
+                {
+                    if (order.Amount > stock)
+                    {
+                        ModelState.AddModelError("Amount", $"Sorry, not enough stock, only {stock} {drink.Name}s  available");
+                        return View(order);
+                    }
+
+                    return RedirectToAction("ProcessOrder", new
+                    {
+                        studentNumber = order.StudentNumber,
+                        drinkId = order.DrinkId,
+                        amount = order.Amount
+                    });
+
+                }
+                return View(order);
             }
-            return View(order);
-		}
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                ModelState.AddModelError("", "Sorry, unexpected error while processing the order, try again please.");
+
+                return View();
+            }
+        }
         
 				
 
-    [HttpGet]
+        [HttpGet]
 		public ActionResult ProcessOrder(int studentNumber, int drinkId, int amount)
 		{            
             Order order = new Order 
@@ -91,6 +111,8 @@ namespace Someren_Database.Controllers
             };
 
             return View(viewModel);
+
+
 		}       
 
         [HttpPost]
@@ -98,20 +120,6 @@ namespace Someren_Database.Controllers
 		{
             try
             {
-                int drinkStock = _drinksRepository.GetStockById(viewmodel.Drink.DrinkId);
-
-                if (viewmodel.Order.Amount > drinkStock)
-                {
-                    ViewBag.OrderError = $"Sorry, order not processed due to insufficient stock." +
-                                         $"Drink: {viewmodel.Drink.Name} Available stock: {drinkStock}";
-
-                    viewmodel.Drink = _drinksRepository.GetDrinkById(viewmodel.Order.DrinkId);
-                    viewmodel.Student = _studentsRepository.GetByStudentNumber(viewmodel.Order.StudentNumber);
-
-                    return View("OrderDrinks", viewmodel.Order);
-                }
-
-
                 _drinksRepository.AddOrder(viewmodel.Order);
                 _drinksRepository.ReduceStock(viewmodel.Order, viewmodel.Drink);
                 return RedirectToAction("DrinksIndex");
