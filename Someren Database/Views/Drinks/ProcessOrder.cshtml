@@ -4,6 +4,8 @@
 	ViewData["Title"] = "Confirm Order";
 }
 
+<h1>Order Confirmation</h1>
+
 <form action="/Drinks/ProcessOrder" method="POST">
    
     <input type="hidden" asp-for="Order.StudentNumber" />
@@ -18,7 +20,7 @@
         <p>Amount: @Model.Order.Amount</p>
     </div>
 
-    <button type="submit">Confirm Order</button>
+    <button type="submit" class="btn btn-primary">Confirm Order</button>
+    <a href="/Drinks/OrderDrinks" class="btn btn-primary">Cancel</a>
 </form>
 
-<a href="/Drinks/OrderDrinks" class="btn btn-primary">Cancel</a>
