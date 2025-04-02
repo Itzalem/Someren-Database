@@ -27,7 +27,52 @@ namespace Someren_Database.Repositories
 			return new Drink(drinkId, name, vat, stockOfDrink, type);
 		}
 
-		public List<Drink> ListDrinks()
+		public Drink GetDrinkById(int drinkId)
+		{
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT drink_id, name, vat, stockOfDrink, type " +
+                    "FROM Drinks WHERE drink_id = @drinkId;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@drinkId", drinkId);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    Drink drink = ReadDrink(reader);
+                    reader.Close();
+                    return drink;
+                }
+                else
+                {
+                    reader.Close();
+                    return null;
+                }
+            }
+
+        }
+
+		public int GetStockById(int drinkId)
+		{
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT stockOfDrink " +
+                    "FROM Drinks WHERE drink_id = @drinkId;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@drinkId", drinkId);
+
+                connection.Open();
+                object stock = command.ExecuteScalar();
+
+				return Convert.ToInt32(stock);
+            }
+        }
+
+        public List<Drink> ListDrinks()
 		{
 			List<Drink> drinks = new List<Drink>();
 			using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -51,5 +96,60 @@ namespace Someren_Database.Repositories
 			return drinks;
 
 		}
+
+		public void AddOrder(Order order)
+		{
+			using (SqlConnection connection = new SqlConnection(_connectionString))
+			{
+				string query = $"INSERT INTO Orders (studentNumber, drink_id, amount) " +
+								$"VALUES (@studentNumber, @drink_id, @amount);" +
+								$"SELECT SCOPE_IDENTITY();";
+
+				SqlCommand command = new SqlCommand(query, connection);
+
+				command.Parameters.AddWithValue("@studentNumber", order.StudentNumber);
+				command.Parameters.AddWithValue("@drink_id", order.DrinkId);
+				command.Parameters.AddWithValue("@amount", order.Amount);
+
+				command.Connection.Open();
+
+				//to get the identity value of the scope 
+				object result = command.ExecuteScalar(); 
+				if (result != null)
+				{
+					order.OrderId = Convert.ToInt32(result);
+				}
+				else
+				{
+					throw new Exception("Ordering failed");
+				}
+
+			}
+
+		}
+
+		public void ReduceStock (Order order, Drink drink)
+		{
+			using (SqlConnection connection = new SqlConnection(_connectionString))
+			{
+				string query = "UPDATE Drinks " +
+							"SET stockOfDrink = stockOfDrink - @amount " +
+                            "WHERE drink_id = @drink_id ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@amount", order.Amount);
+                command.Parameters.AddWithValue("@drink_id", drink.DrinkId);
+
+                command.Connection.Open();
+
+                int rowsChanged = command.ExecuteNonQuery();
+                if (rowsChanged != 1)
+                {
+                    throw new Exception("Stock not updated");
+                }
+            }
+
+        }
 	}
 }
