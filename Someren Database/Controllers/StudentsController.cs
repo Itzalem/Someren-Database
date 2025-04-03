@@ -88,7 +88,6 @@ namespace Someren_Database.Controllers
 		}
 
 
-		// GET: UsersController/Edit/5
 		[HttpGet]
 		public ActionResult UpdateStudent(int? studentNumber)
 		{
@@ -101,7 +100,6 @@ namespace Someren_Database.Controllers
 			return View(student);
 		}
 
-		// POST: Users/Edit/5
 		[HttpPost]
 		public IActionResult UpdateStudent(Student student)
 		{

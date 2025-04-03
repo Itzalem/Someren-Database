@@ -132,7 +132,7 @@ namespace Someren_Database.Repositories
 
 				SqlCommand command = new SqlCommand(query, connection);
 
-				//for the injection thingy
+				//for the injection 
 				command.Parameters.AddWithValue("@ChangedStudentNumber", student.StudentNumber);
 				command.Parameters.AddWithValue("@FirstName", student.FirstName);
 				command.Parameters.AddWithValue("@LastName", student.LastName);

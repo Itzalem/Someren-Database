@@ -96,7 +96,6 @@ namespace Someren_Database.Controllers
                 Amount = amount
             };
 
-            // Utilizas los repositorios para obtener el Student y el Drink completos.
             Student student = _studentsRepository.GetByStudentNumber(studentNumber);
 
             Drink drink = _drinksRepository.GetDrinkById(drinkId);

@@ -6,8 +6,7 @@
 <h2>Create Order</h2>
 
 <form action="/Drinks/OrderDrinks" method="POST">
-
-    <!-- Selección del Estudiante -->
+    
     <div class="form-group py-2">
         <label asp-for="StudentNumber" class="control-label">Student:</label>
         <select asp-for="StudentNumber" asp-items="(SelectList)ViewBag.StudentsList" class="form-control">
@@ -22,8 +21,6 @@
         </select>
     </div>
 
-  
-    <!-- Cantidad -->
     <div class="form-group py-2">
         <label asp-for="Amount" class="control-label">Amount:</label>
         <input asp-for="Amount" type="number" class="form-control" required />
