@@ -1,10 +1,10 @@
-For sprint 2, Lukas and Jari created the necessary tables in the Microsoft SQL Server Management Software, while Melissa was setting up the MVC project solution, 
-including making the necessary style changes to the Home page for a smoother user experience.
+For sprint 3, we worked as a team on checking the overall quality of the code and tried each function to enssure eevrything was working smoothly.
+Lukas and Jari .....
 
-Each member chose a variant. For both assignments Melissa took care of the Students requirements, Lukas the Rooms and Jari the Lecturers. 
-We wrote and implemented our code individually, in which we overall connected successfully the DB with the project and added the CRUD functionalities. 
-Following the users' stories we created a list for each group, continuing with the options of adding, editing and finally deleting. 
-Each one, on their own code according to the variant we chose, added extra features like filtering, searching and preselecting in some cases. 
-No one was involved in another's teammate code, we limited ourselves to the chosen variant in both assignments, solving challenges and coming up with ideas as a team 
-but implementing them independently.
+Following the schema of sprint 2, we remained with the same variable letters. Melissa took care of A with the ordering drinks, Jari of the B one managing activity supervisors and 
+Lukas with C managing activity parcticipants. This time we created the checklist for the user stories ourselves and then implemented our codes individually to meet the 
+requirements, adding the necessary functions and improvements. 
+Once again we stated that we wouldn't be involved in another's teammate code, but insted focused on our own variants. The team support was present when we came up with questions 
+and at the time of giving feedback on new ideas for the project. 
+
  

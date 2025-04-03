@@ -12,8 +12,3 @@ namespace Someren_Database.ViewModels
 
     }
 }
-/*public int StudentNumber { get; set; }
-        public string StudentName { get; set; }
-        public string StudentLastName { get; set; }
-        public int DrinkId { get; set; }
-        public string DrinkName { get; set; }*/
