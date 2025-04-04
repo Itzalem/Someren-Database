@@ -171,5 +171,106 @@ namespace Someren_Database.Repositories
             }
         }
 
+    
+
+    public async Task<List<Teacher>> GetSupervisorsAsync(int activityId)
+        {
+            List<Teacher> supervisors = new List<Teacher>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                string query = @"SELECT t.TeacherID, t.FirstName, t.LastName 
+                         FROM Teachers t 
+                         INNER JOIN Supervise ap 
+                             ON t.TeacherID = ap.teacherID
+                         WHERE ap.activity_id = @ActivityId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ActivityId", activityId);
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            supervisors.Add(new Teacher
+                            {
+                                TeacherID = reader.GetInt32(0),
+                                FirstName = reader.GetString(1),
+                                LastName = reader.GetString(2)
+                            });
+                        }
+                    }
+                }
+            }
+            return supervisors;
+        }
+
+        public async Task<List<Teacher>> GetNotSupervisorsAsync(int activityId)
+        {
+            List<Teacher> notSupervisors = new List<Teacher>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                string query = @"SELECT t.TeacherID, t.FirstName, t.LastName 
+                         FROM Teachers t 
+                         WHERE t.TeacherID NOT IN 
+                             (SELECT TeacherID FROM Supervise WHERE activity_id = @ActivityId)";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ActivityId", activityId);
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            notSupervisors.Add(new Teacher
+                            {
+                                TeacherID = reader.GetInt32(0),
+                                FirstName = reader.GetString(1),
+                                LastName = reader.GetString(2)
+                            });
+                        }
+                    }
+                }
+            }
+            return notSupervisors;
+        }
+
+        public async Task AddSupervisorAsync(int activityId, int teacherID)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                string query = @"INSERT INTO Supervise (activity_id, TeacherID) 
+                         VALUES (@ActivityId, @TeacherID)";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ActivityId", activityId);
+                    cmd.Parameters.AddWithValue("@TeacherID", teacherID);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task RemoveSupervisorAsync(int activityId, int teacherID)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                string query = @"DELETE FROM Supervise 
+                         WHERE activity_id = @ActivityId AND teacherID = @TeacherID";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ActivityId", activityId);
+                    cmd.Parameters.AddWithValue("@TeacherID", teacherID);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
     }
 }

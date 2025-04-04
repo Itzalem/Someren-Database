@@ -5,7 +5,7 @@
 }
 
 <div class="container mt-4">
-    <h1>List of All Activities</h1>
+    <h1>Manage Activity Supervisors</h1>
 
     <table class="table table-striped table-bordered table-hover">
         <thead class="thead-dark">
@@ -24,8 +24,8 @@
                     <td>@activity.StartDateTime.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@activity.EndDateTime.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>
-                        <a asp-action="ManageSupervisors" asp-controller="ActivitySupervisor" asp-route-activityId="@activity.ActivityId" class="btn btn-primary">Manage Supervisors</a>
-                        <a asp-action="ManageParticipants" asp-controller="ActivityParticipant" asp-route-activityId="@activity.ActivityId" class="btn btn-danger">Manage Participants</a>
+                        <a asp-action="" asp-controller="" asp-route-id="" class="btn btn-primary">Manage Supervisors</a>
+                        <a asp-action="" asp-controller="" asp-route-id="" class="btn btn-danger">Manage Participants</a>
                     </td>
                 </tr>
             }

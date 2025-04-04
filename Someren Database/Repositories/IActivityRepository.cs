@@ -11,5 +11,9 @@ namespace Someren_Database.Repositories
         Task<List<Student>> GetNonParticipantsAsync(int activityId);
         Task AddParticipantAsync(int activityId, int studentId);
         Task RemoveParticipantAsync(int activityId, int studentId);
+        Task<List<Teacher>> GetSupervisorsAsync(int activityId);
+        Task<List<Teacher>> GetNotSupervisorsAsync(int activityId);
+        Task AddSupervisorAsync(int activityId, int teacherID);
+        Task RemoveSupervisorAsync(int activityId, int teacherID);
     }
 }
