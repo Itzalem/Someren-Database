@@ -35,23 +35,13 @@ namespace Someren_Database.Controllers
         [HttpGet]
         public ActionResult OrderDrinks(string lastNameFilter = null)
         {
-            var students = _studentsRepository.ListStudents(lastNameFilter);
-            var drinks = _drinksRepository.ListDrinks();
-
-            var studentForSelect = students.Select(student => new {
-                student.StudentNumber,
-                FullName = student.FirstName + " " + student.LastName
-            });
-
-            ViewBag.StudentsList = new SelectList(studentForSelect, "StudentNumber", "FullName");
-
-            ViewBag.DrinksList = new SelectList(drinks, "DrinkId", "Name");
+            ListsDropdown(lastNameFilter);
 
             return View();
         }
 
         [HttpPost]
-        public ActionResult OrderDrinks(Order order)
+        public ActionResult OrderDrinks(Order order, string lastNameFilter = null)
         {
             try
             {
@@ -64,6 +54,9 @@ namespace Someren_Database.Controllers
                     if (order.Amount > stock)
                     {
                         ModelState.AddModelError("Amount", $"Sorry, not enough stock, {stock} {drink.Name}s  available at the moment");
+
+                        ListsDropdown(lastNameFilter);
+
                         return View(order);
                     }
 
@@ -75,6 +68,8 @@ namespace Someren_Database.Controllers
                     });
 
                 }
+
+                ListsDropdown(lastNameFilter);
                 return View(order);
             }
             catch (Exception ex)
@@ -82,8 +77,23 @@ namespace Someren_Database.Controllers
                 Console.WriteLine(ex.Message);
                 ModelState.AddModelError("", "Sorry, unexpected error while processing the order, try again please.");
 
+                ListsDropdown(lastNameFilter);
                 return View();
             }
+        }
+
+        private void ListsDropdown(string lastNameFilter = null)
+        {
+            var students = _studentsRepository.ListStudents(lastNameFilter);
+            var drinks = _drinksRepository.ListDrinks();
+
+            var studentForSelect = students.Select(student => new {
+                student.StudentNumber,
+                FullName = student.FirstName + " " + student.LastName
+            });
+
+            ViewBag.StudentsList = new SelectList(studentForSelect, "StudentNumber", "FullName");
+            ViewBag.DrinksList = new SelectList(drinks, "DrinkId", "Name");
         }
 
         [HttpGet]
