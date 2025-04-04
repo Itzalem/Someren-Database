@@ -1,10 +1,8 @@
-For sprint 3, we worked as a team on checking the overall quality of the code and tried each function to enssure eevrything was working smoothly.
-Lukas and Jari .....
+For sprint 3, we worked as a team on checking the overall quality of the code and tried each function to ensure everything was working smoothly.
+Lukas and Jari together additionally created the database table and activity list in MVC as a previous step to work on their variants. 
 
-Following the schema of sprint 2, we remained with the same variable letters. Melissa took care of A with the ordering drinks, Jari of the B one managing activity supervisors and 
-Lukas with C managing activity parcticipants. This time we created the checklist for the user stories ourselves and then implemented our codes individually to meet the 
+Following the schema of sprint 2, we remained with the same variable letters. Melissa took care of A with the ordering of drinks, Jari of the B one, managing activity supervisors, and 
+Lukas with C managing activity participants. This time, we created the checklist for the user stories ourselves and then implemented our code individually to meet the 
 requirements, adding the necessary functions and improvements. 
-Once again we stated that we wouldn't be involved in another's teammate code, but insted focused on our own variants. The team support was present when we came up with questions 
+Once again, we stated that we wouldn't be involved in another teammate's code, but instead focused on our variants. The team support was present when we came up with questions 
 and at the time of giving feedback on new ideas for the project. 
-
- 

@@ -117,7 +117,9 @@ namespace Someren_Database.Controllers
             {
                 _drinksRepository.AddOrder(viewmodel.Order);
                 _drinksRepository.ReduceStock(viewmodel.Order, viewmodel.Drink);
-                return RedirectToAction("OrderDrinks");
+
+				TempData["SuccessMessage"] = "Order placed correctly";
+				return RedirectToAction("OrderDrinks");
             }
             catch (Exception ex)
             {
