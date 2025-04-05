@@ -83,7 +83,7 @@ namespace Someren_Database.Repositories
                          FROM Students s 
                          INNER JOIN ActivityParticipant ap 
                              ON s.StudentNumber = ap.studentNumber
-                         WHERE ap.activity_id = @ActivityId";
+                         WHERE ap.activity_id = @ActivityId AND s.IsDeleted = 0";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -114,7 +114,7 @@ namespace Someren_Database.Repositories
                 await conn.OpenAsync();
                 string query = @"SELECT s.StudentNumber, s.FirstName, s.LastName 
                          FROM Students s 
-                         WHERE s.StudentNumber NOT IN 
+                         WHERE s.IsDeleted = 0 AND s.StudentNumber NOT IN 
                              (SELECT studentNumber FROM ActivityParticipant WHERE activity_id = @ActivityId)"; 
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
